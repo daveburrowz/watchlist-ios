@@ -10,7 +10,9 @@ import SwiftUI
 struct RootView: View {
     var body: some View {
         TabView {
-            ContentView(name: "Search").tabItem {
+            NavigationView {
+                SearchView()
+            }.tabItem {
                 Image(systemName: "magnifyingglass")
                 Text("Search")
             }
