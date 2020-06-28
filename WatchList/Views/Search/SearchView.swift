@@ -13,19 +13,22 @@ struct SearchView: View {
     
     var body: some View {
         VStack {
-            SearchBar(text: $viewModel.query)
+            SearchBar(text: $viewModel.query, isLoading: $viewModel.isLoading)
                 .padding(.top)
-            if viewModel.isLoading {
-                ProgressView()
-            }
             if viewModel.isShowingResults {
-                Text("You searched for: \(viewModel.query)")
-                ScrollView {
-                    LazyVStack {
-                        ForEach(viewModel.searchList, id: \.self) { result in
-                            Text("\(result.title)")
-                        }
-                    }.padding(.bottom)
+                if viewModel.searchList.count > 0 {
+                    Text("You searched for: \(viewModel.query)")
+                    ScrollView {
+                        LazyVStack {
+                            ForEach(viewModel.searchList, id: \.self) { result in
+                                Text("\(result.title)")
+                            }
+                        }.padding(.bottom)
+                    }
+                } else {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
                 }
             } else {
                 Spacer()
