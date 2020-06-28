@@ -21,7 +21,7 @@ class SearchViewModel: ViewModel {
     @Published
     var state: SearchState
     var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
-    var cancelBag = [AnyCancellable]()
+    var cancelBag = Set<AnyCancellable>()
     
     init() {
         state = SearchState(searchList: [])
@@ -40,7 +40,6 @@ class SearchViewModel: ViewModel {
             return
         }
         repo.search(for: query)
-            .print()
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] in
                     self?.state = SearchState(searchList: $0)
