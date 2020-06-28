@@ -9,19 +9,17 @@ import SwiftUI
 
 struct SearchView: View {
     
-    @State var search: String = ""
-    @ObservedObject var viewModel: AnyViewModel<SearchState, SearchStateInput> = AnyViewModel(SearchViewModel())
+    @ObservedObject var viewModel = BindableSearchViewModel()
     
     var body: some View {
         VStack {
-            SearchBar(text: $search.didSet(execute: { (term) in
-                viewModel.trigger(.search(for: term))
-            })).padding(.top)
-            if viewModel.state.searchList.count > 0 {
-                Text("You searched for: \(search)")
+            SearchBar(text: $viewModel.query)
+                .padding(.top)
+            if viewModel.searchList.count > 0 {
+                Text("You searched for: \(viewModel.query)")
                 ScrollView {
                     LazyVStack {
-                        ForEach(viewModel.state.searchList, id: \.self) { result in
+                        ForEach(viewModel.searchList, id: \.self) { result in
                             Text("\(result.title)")
                         }
                     }.padding(.bottom)
