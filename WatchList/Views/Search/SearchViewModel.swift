@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 struct SearchState {
-    var searchList: [String]
+    var searchList: [SearchResult]
 }
 
 enum SearchStateInput {
@@ -16,31 +17,33 @@ enum SearchStateInput {
 }
 
 class SearchViewModel: ViewModel {
-
+    
     @Published
     var state: SearchState
-
+    var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
+    var cancelBag = [AnyCancellable]()
+    
     init() {
         state = SearchState(searchList: [])
     }
-
+    
     func trigger(_ input: SearchStateInput) {
         switch input {
         case .search(let term):
             search(for: term)
         }
     }
-
-    private func search(for term: String) {
-        guard term.count > 0 else {
+    
+    private func search(for query: String) {
+        guard query.count > 0 else {
             state = SearchState(searchList: [])
             return
         }
-        var strings = [String]()
-        for i in 1...100 {
-            let string = "\(term) \(i)"
-            strings.append(string)
-        }
-        state = SearchState(searchList: strings)
+        repo.search(for: query)
+            .print()
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] in
+                    self?.state = SearchState(searchList: $0)
+                  }).store(in: &cancelBag)
     }
 }

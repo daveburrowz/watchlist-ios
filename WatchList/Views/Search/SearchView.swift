@@ -20,8 +20,8 @@ struct SearchView: View {
             if viewModel.state.searchList.count > 0 {
                 ScrollView {
                     LazyVStack {
-                        ForEach(viewModel.state.searchList, id: \.self) { value in
-                            Text("\(value)")
+                        ForEach(viewModel.state.searchList, id: \.self) { result in
+                            Text("\(result.title)")
                         }
                     }.padding(.bottom)
                 }
