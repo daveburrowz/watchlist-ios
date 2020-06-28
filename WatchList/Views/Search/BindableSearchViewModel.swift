@@ -13,6 +13,8 @@ class BindableSearchViewModel: ObservableObject {
 
     @Published var searchList: [SearchResult] = []
     @Published var query = ""
+    @Published var isLoading = false
+    @Published var isShowingResults = false
     
     private var cancelBag = Set<AnyCancellable>()
     private var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
@@ -20,26 +22,39 @@ class BindableSearchViewModel: ObservableObject {
     
     init() {
         configureDebouncePublisher()
+        configureShowingResultsPublisher()
     }
     
     private func configureDebouncePublisher() {
         $query
             .removeDuplicates()
-            .debounce(for: 2.0, scheduler: RunLoop.main)
+            .debounce(for: 0.5, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
             .sink(receiveValue: { self.search(for: $0)})
             .store(in: &cancelBag)
     }
     
+    private func configureShowingResultsPublisher() {
+        $query
+            .receive(on: RunLoop.main)
+            .map({ $0.count > 0 })
+            .assign(to: \.isShowingResults, on: self)
+            .store(in: &cancelBag)
+    }
+    
     private func search(for query: String) {
+        isLoading = true
         guard query.count > 0 else {
+            isLoading = false
             searchList = []
             return
         }
         repo.search(for: query)
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] in
-                    self?.searchList = $0
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.isLoading = false
+            },
+                  receiveValue: { [weak self] results in
+                    self?.searchList = results
                   }).store(in: &cancelBag)
     }
 }

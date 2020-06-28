@@ -15,7 +15,10 @@ struct SearchView: View {
         VStack {
             SearchBar(text: $viewModel.query)
                 .padding(.top)
-            if viewModel.searchList.count > 0 {
+            if viewModel.isLoading {
+                ProgressView()
+            }
+            if viewModel.isShowingResults {
                 Text("You searched for: \(viewModel.query)")
                 ScrollView {
                     LazyVStack {
