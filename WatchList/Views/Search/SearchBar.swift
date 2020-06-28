@@ -34,7 +34,7 @@ struct SearchBar: View {
                                 .padding(.leading, 8)
                         }
                         
-                        if isEditing {
+                        if isEditing && text.count > 0 {
                             Button(action: {
                                 self.text = ""
                                 
