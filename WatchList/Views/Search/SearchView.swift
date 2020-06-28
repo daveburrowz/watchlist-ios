@@ -18,6 +18,7 @@ struct SearchView: View {
                 viewModel.trigger(.search(for: term))
             })).padding(.top)
             if viewModel.state.searchList.count > 0 {
+                Text("You searched for: \(search)")
                 ScrollView {
                     LazyVStack {
                         ForEach(viewModel.state.searchList, id: \.self) { result in
