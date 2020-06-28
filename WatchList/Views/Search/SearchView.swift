@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchView: View {
     
     @State var search: String = ""
-    @ObservedObject var viewModel = SearchViewModel()
+    @ObservedObject var viewModel: AnyViewModel<SearchState, SearchStateInput> = AnyViewModel(SearchViewModel())
     
     var body: some View {
         VStack {

@@ -20,18 +20,33 @@ class SearchViewModel: ViewModel {
     
     @Published
     var state: SearchState
-    var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
-    var cancelBag = Set<AnyCancellable>()
+    
+    @Published
+    private var query: String
+    
+    private var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
+    private var cancelBag = Set<AnyCancellable>()
     
     init() {
         state = SearchState(searchList: [])
+        query = ""
+        configureDebouncePublisher()
     }
     
     func trigger(_ input: SearchStateInput) {
         switch input {
         case .search(let term):
-            search(for: term)
+            query = term
         }
+    }
+    
+    private func configureDebouncePublisher() {
+        $query
+            .removeDuplicates()
+            .debounce(for: 2.0, scheduler: RunLoop.main)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { self.search(for: $0)})
+            .store(in: &cancelBag)
     }
     
     private func search(for query: String) {
