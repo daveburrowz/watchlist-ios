@@ -11,10 +11,15 @@ import Combine
 
 class BindableSearchViewModel: ObservableObject {
     
-    @Published var searchList: [SearchResult] = []
+    enum State {
+        case empty
+        case loading
+        case loaded(searchList: [SearchResult])
+    }
+    
     @Published var query = ""
-    @Published var isLoading = false
-    @Published var isShowingResults = false
+    
+    @Published var state: State = .empty
     
     private var cancelBag = Set<AnyCancellable>()
     private var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
@@ -23,7 +28,6 @@ class BindableSearchViewModel: ObservableObject {
     init() {
         configureSearchDebouncePublisher()
         configureShowingResultsPublisher()
-        configureIsLoadingPublisher()
     }
     
     private func configureSearchDebouncePublisher() {
@@ -38,32 +42,21 @@ class BindableSearchViewModel: ObservableObject {
     private func configureShowingResultsPublisher() {
         $query
             .receive(on: RunLoop.main)
-            .map({ $0.count > 0 })
-            .assign(to: \.isShowingResults, on: self)
-            .store(in: &cancelBag)
-    }
-    
-    private func configureIsLoadingPublisher() {
-        $query
-            .receive(on: RunLoop.main)
-            .map({ $0.count > 0 })
-            .assign(to: \.isLoading, on: self)
+            .map({ $0.count > 0 ? .loading : .empty })
+            .assign(to: \.state, on: self)
             .store(in: &cancelBag)
     }
     
     private func search(for query: String) {
-        isLoading = true
         guard query.count > 0 else {
-            isLoading = false
-            searchList = []
+            state = .empty
             return
         }
         repo.search(for: query)
-            .sink(receiveCompletion: { [weak self] _ in
-                self?.isLoading = false
+            .sink(receiveCompletion: {  _ in
             },
             receiveValue: { [weak self] results in
-                self?.searchList = results
+                self?.state = .loaded(searchList: results)
             }).store(in: &cancelBag)
     }
 }

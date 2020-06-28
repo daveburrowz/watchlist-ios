@@ -15,25 +15,46 @@ struct SearchView: View {
         VStack {
             SearchBar(text: $viewModel.query)
                 .padding(.top)
-            if viewModel.isLoading {
-                ProgressView()
-            }
-            if viewModel.isShowingResults {
-                Text("You searched for: \(viewModel.query)")
-                ScrollView {
-                    LazyVStack {
-                        ForEach(viewModel.searchList, id: \.self) { result in
-                            Text("\(result.title)")
-                        }
-                    }.padding(.bottom)
-                }
-            } else {
-                Spacer()
-                Text("Enter Search")
-                Spacer()
+
+            switch viewModel.state {
+            case .empty:
+                 empty
+            case .loading:
+                 loading
+            case .loaded(let results):
+                 loaded(results: results)
             }
         }.navigationTitle("Search")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    var empty: some View {
+        Group {
+            Spacer()
+            Text("Enter Search")
+            Spacer()
+        }
+    }
+    
+    var loading: some View {
+        Group {
+            Spacer()
+            ProgressView()
+            Spacer()
+        }
+    }
+    
+    func loaded(results: [SearchResult]) -> some View {
+        Group {
+            Text("You searched for: \(viewModel.query)")
+            ScrollView {
+                LazyVStack {
+                    ForEach(results, id: \.self) { result in
+                        Text("\(result.title)")
+                    }
+                }.padding(.bottom)
+            }
+        }
     }
 }
 
