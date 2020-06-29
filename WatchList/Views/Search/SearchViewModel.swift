@@ -36,15 +36,16 @@ class SearchViewModel: ViewModel {
     
     private func configureSearchDebouncePublisher() {
         state.$query
-            .removeDuplicates()
+            .dropFirst()
             .debounce(for: 1, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { self.search(for: $0)})
+            .sink(receiveValue: { [weak self] in self?.search(for: $0)})
             .store(in: &cancelBag)
     }
     
     private func configureShowingResultsPublisher() {
         state.$query
+            .dropFirst()
             .receive(on: RunLoop.main)
             .map({ $0.count > 0 })
             .assign(to: \.isShowingResults, on: state)
@@ -53,14 +54,11 @@ class SearchViewModel: ViewModel {
     
     private func configureIsLoadingPublisher() {
         state.$query
+            .dropFirst()
             .receive(on: RunLoop.main)
             .map({ $0.count > 0 })
             .assign(to: \.isLoading, on: state)
             .store(in: &cancelBag)
-    }
-    
-    func trigger(_ input: SearchStateInput) {
-
     }
     
     private func search(for query: String) {

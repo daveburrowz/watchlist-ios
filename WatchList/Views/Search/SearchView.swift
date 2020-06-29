@@ -22,6 +22,11 @@ struct SearchView: View {
             if viewModel.state.isShowingResults {
                 if viewModel.state.searchList.count > 0 {
                     Text("You searched for: \(viewModel.state.query)")
+                    NavigationLink(
+                        destination: LazyView(SearchView(viewModel: AnyViewModel(SearchViewModel()))),
+                        label: {
+                            Text("Navigate")
+                        })
                     ScrollView {
                         LazyVStack {
                             ForEach(viewModel.state.searchList, id: \.self) { result in

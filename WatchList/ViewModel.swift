@@ -25,12 +25,15 @@ final class AnyViewModel<State: ObservableObject>: ViewModel {
     private var anyCancellable: AnyCancellable? = nil
 
     var state: State
+    
+    private var viewModel: AnyObject
 
     // MARK: Initialization
     init<V: ViewModel>(_ viewModel: V) where V.State == State {
 
+        self.viewModel = viewModel
         self.state = viewModel.state
-        anyCancellable = state.objectWillChange.sink { [weak self] (_) in
+        anyCancellable = state.objectWillChange.sink { [weak self] (value) in
             self?.objectWillChange.send()
         }
     }
