@@ -24,7 +24,7 @@ class SearchViewModel: ViewModel {
     @Published
     private var query: String
     
-    private var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
+    private var repo = NetworkSearchRepository(httpClient: TraktHTTPClient(httpClient: FoundationHTTPClient()))
     private var cancelBag = Set<AnyCancellable>()
     
     init() {

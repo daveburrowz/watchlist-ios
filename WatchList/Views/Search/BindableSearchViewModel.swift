@@ -17,7 +17,7 @@ class BindableSearchViewModel: ObservableObject {
     @Published var isShowingResults = false
     
     private var cancelBag = Set<AnyCancellable>()
-    private var repo = NetworkSearchRepository(httpClient: FoundationHTTPClient())
+    private var repo = NetworkSearchRepository(httpClient: TraktHTTPClient(httpClient: FoundationHTTPClient()))
     
     
     init() {
