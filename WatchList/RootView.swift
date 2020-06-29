@@ -11,7 +11,7 @@ struct RootView: View {
     var body: some View {
         TabView {
             NavigationView {
-                SearchView()
+                SearchView(viewModel: AnyViewModel(SearchViewModel()))
             }.tabItem {
                 Image(systemName: "magnifyingglass")
                 Text("Search")

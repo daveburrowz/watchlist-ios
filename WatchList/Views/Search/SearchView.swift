@@ -9,18 +9,22 @@ import SwiftUI
 
 struct SearchView: View {
     
-    @ObservedObject var viewModel = BindableSearchViewModel()
+    @ObservedObject var viewModel: AnyViewModel<SearchState>
+    
+    init(viewModel: AnyViewModel<SearchState>) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         VStack {
-            SearchBar(text: $viewModel.query, isLoading: $viewModel.isLoading)
+            SearchBar(text: $viewModel.state.query, isLoading: $viewModel.state.isLoading)
                 .padding(.top)
-            if viewModel.isShowingResults {
-                if viewModel.searchList.count > 0 {
-                    Text("You searched for: \(viewModel.query)")
+            if viewModel.state.isShowingResults {
+                if viewModel.state.searchList.count > 0 {
+                    Text("You searched for: \(viewModel.state.query)")
                     ScrollView {
                         LazyVStack {
-                            ForEach(viewModel.searchList, id: \.self) { result in
+                            ForEach(viewModel.state.searchList, id: \.self) { result in
                                 Text("\(result.title)")
                             }
                         }.padding(.bottom)
@@ -43,7 +47,12 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SearchView()
+            SearchView(viewModel: AnyViewModel(PreviewSearchViewModel()))
         }
     }
+}
+
+class PreviewSearchViewModel: ViewModel {
+    @Published
+    var state: SearchState = SearchState()
 }

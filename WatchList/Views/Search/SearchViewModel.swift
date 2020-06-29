@@ -8,8 +8,11 @@
 import Foundation
 import Combine
 
-struct SearchState {
-    var searchList: [SearchResult]
+class SearchState: ObservableObject {
+    @Published var searchList: [SearchResult] = []
+    @Published var query = ""
+    @Published var isLoading = false
+    @Published var isShowingResults = false
 }
 
 enum SearchStateInput {
@@ -19,45 +22,58 @@ enum SearchStateInput {
 class SearchViewModel: ViewModel {
     
     @Published
-    var state: SearchState
-    
-    @Published
-    private var query: String
+    var state: SearchState = SearchState()
     
     private var repo = NetworkSearchRepository(httpClient: TraktHTTPClient(httpClient: FoundationHTTPClient()))
     private var cancelBag = Set<AnyCancellable>()
+
     
     init() {
-        state = SearchState(searchList: [])
-        query = ""
-        configureDebouncePublisher()
+        configureSearchDebouncePublisher()
+        configureShowingResultsPublisher()
+        configureIsLoadingPublisher()
     }
     
-    func trigger(_ input: SearchStateInput) {
-        switch input {
-        case .search(let term):
-            query = term
-        }
-    }
-    
-    private func configureDebouncePublisher() {
-        $query
+    private func configureSearchDebouncePublisher() {
+        state.$query
             .removeDuplicates()
-            .debounce(for: 2.0, scheduler: RunLoop.main)
+            .debounce(for: 1, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
             .sink(receiveValue: { self.search(for: $0)})
             .store(in: &cancelBag)
     }
     
+    private func configureShowingResultsPublisher() {
+        state.$query
+            .receive(on: RunLoop.main)
+            .map({ $0.count > 0 })
+            .assign(to: \.isShowingResults, on: state)
+            .store(in: &cancelBag)
+    }
+    
+    private func configureIsLoadingPublisher() {
+        state.$query
+            .receive(on: RunLoop.main)
+            .map({ $0.count > 0 })
+            .assign(to: \.isLoading, on: state)
+            .store(in: &cancelBag)
+    }
+    
+    func trigger(_ input: SearchStateInput) {
+
+    }
+    
     private func search(for query: String) {
         guard query.count > 0 else {
-            state = SearchState(searchList: [])
+            state.searchList = []
             return
         }
         repo.search(for: query)
-            .sink(receiveCompletion: { _ in },
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.state.isLoading = false
+            },
                   receiveValue: { [weak self] in
-                    self?.state = SearchState(searchList: $0)
+                    self?.state.searchList = $0
                   }).store(in: &cancelBag)
     }
 }

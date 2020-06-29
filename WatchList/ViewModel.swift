@@ -8,12 +8,10 @@
 import Combine
 import Foundation
 
-protocol ViewModel: ObservableObject where ObjectWillChangePublisher.Output == Void {
-    associatedtype State
-    associatedtype Input
+protocol ViewModel: ObservableObject where Self.ObjectWillChangePublisher == ObservableObjectPublisher {
+    associatedtype State: ObservableObject
 
-    var state: State { get }
-    func trigger(_ input: Input)
+    var state: State { get set }
 }
 
 extension AnyViewModel: Identifiable where State: Identifiable {
@@ -22,37 +20,19 @@ extension AnyViewModel: Identifiable where State: Identifiable {
     }
 }
 
-@dynamicMemberLookup
-final class AnyViewModel<State, Input>: ViewModel {
+final class AnyViewModel<State: ObservableObject>: ViewModel {
 
-    // MARK: Stored properties
-    private let wrappedObjectWillChange: () -> AnyPublisher<Void, Never>
-    private let wrappedState: () -> State
-    private let wrappedTrigger: (Input) -> Void
+    private var anyCancellable: AnyCancellable? = nil
 
-    // MARK: Computed properties
-    var objectWillChange: AnyPublisher<Void, Never> {
-        wrappedObjectWillChange()
-    }
-
-    var state: State {
-        wrappedState()
-    }
-
-    // MARK: Methods
-    func trigger(_ input: Input) {
-        wrappedTrigger(input)
-    }
-
-    subscript<Value>(dynamicMember keyPath: KeyPath<State, Value>) -> Value {
-        state[keyPath: keyPath]
-    }
+    var state: State
 
     // MARK: Initialization
-    init<V: ViewModel>(_ viewModel: V) where V.State == State, V.Input == Input {
-        self.wrappedObjectWillChange = { viewModel.objectWillChange.eraseToAnyPublisher() }
-        self.wrappedState = { viewModel.state }
-        self.wrappedTrigger = viewModel.trigger
+    init<V: ViewModel>(_ viewModel: V) where V.State == State {
+
+        self.state = viewModel.state
+        anyCancellable = state.objectWillChange.sink { [weak self] (_) in
+            self?.objectWillChange.send()
+        }
     }
 
 }
