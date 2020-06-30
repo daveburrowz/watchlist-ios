@@ -31,7 +31,7 @@ struct SearchView: View {
                             ForEach(state.searchList, id: \.self) { result in
                                 NavigationLink(destination: LazyView(viewFactory.detail(result: result))) {
                                     SearchItemView(result: result)
-                                }
+                                }.buttonStyle(PlainButtonStyle())
                             }
                         }.padding(.bottom)
                     }

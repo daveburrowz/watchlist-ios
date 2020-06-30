@@ -19,6 +19,7 @@ struct SearchItemView: View {
         Text(result.title)
             .frame(minWidth: 0, idealWidth: 100, maxWidth: .infinity, minHeight: 0, idealHeight: 100, maxHeight: 100, alignment: .center)
             .border(Color.black, width: 1)
+            .background(Color.red)
             .padding(.all, 10)
     }
 }
