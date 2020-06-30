@@ -63,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				6D30760724A77A8B0048E545 /* WatchList */,
-				6D30760624A77A8B0048E545 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +72,7 @@
 				6D30760524A77A8B0048E545 /* WatchList.app */,
 			);
 			name = Products;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		6D30760724A77A8B0048E545 /* WatchList */ = {
@@ -89,6 +89,7 @@
 				6D30760E24A77A8C0048E545 /* Preview Content */,
 				6D30761724A77BE00048E545 /* RootView.swift */,
 				6D86340524A796C800D36ADB /* ViewModel.swift */,
+				6D30760624A77A8B0048E545 /* Products */,
 			);
 			path = WatchList;
 			sourceTree = "<group>";

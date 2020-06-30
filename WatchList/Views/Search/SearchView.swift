@@ -9,35 +9,57 @@ import SwiftUI
 
 struct SearchView: View {
     
-    @ObservedObject var viewModel = BindableSearchViewModel()
+    @ObservedObject var viewModel = SearchViewModel()
+    @State var query = ""
     
     var body: some View {
         VStack {
-            SearchBar(text: $viewModel.query, isLoading: $viewModel.isLoading)
+            SearchBar(text: $query.didSet(execute: { (query) in
+                viewModel.trigger(.search(for: query))
+            }), isLoading: $viewModel.state.isLoading)
                 .padding(.top)
-            if viewModel.isShowingResults {
-                if viewModel.searchList.count > 0 {
-                    Text("You searched for: \(viewModel.query)")
-                    ScrollView {
-                        LazyVStack {
-                            ForEach(viewModel.searchList, id: \.self) { result in
-                                Text("\(result.title)")
-                            }
-                        }.padding(.bottom)
-                    }
-                } else {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                }
-            } else {
-                Spacer()
-                Text("Enter Search")
-                Spacer()
-            }
+            content
         }.navigationTitle("Search")
         .navigationBarTitleDisplayMode(.inline)
     }
+    
+    private var empty: some View {
+        Group {
+            Spacer()
+            Text("Enter Search")
+            Spacer()
+        }
+    }
+    
+    private var loading: some View {
+        Group {
+            Spacer()
+            ProgressView()
+            Spacer()
+        }
+    }
+    
+    private func loaded(searchResults: [SearchResult]) -> some View {
+        Group {
+            Text("You searched for: \(query)")
+            ScrollView {
+                LazyVStack {
+                    ForEach(searchResults, id: \.self) { result in
+                        Text("\(result.title)")
+                    }
+                }.padding(.bottom)
+            }
+        }
+    }
+    
+    private var content: some View {
+        switch viewModel.state.state {
+            case .empty:
+                return viewModel.state.isLoading ? AnyView(loading) : AnyView(empty)
+            case .loaded(let searchResults):
+                return AnyView(loaded(searchResults: searchResults))
+            }
+        }
 }
 
 struct SearchView_Previews: PreviewProvider {
