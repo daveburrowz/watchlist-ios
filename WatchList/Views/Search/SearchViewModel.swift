@@ -10,9 +10,6 @@ import Combine
 
 protocol SearchViewModel {
     var state: SearchViewModelState { get }
-    var statePublished: Published<SearchViewModelState> { get }
-    var statePublisher: Published<SearchViewModelState>.Publisher { get }
-    
     func didTapButton()
 }
 
@@ -27,14 +24,6 @@ class SearchViewModelImpl: ObservableObject, SearchViewModel {
     
     @Published
     var state: SearchViewModelState = SearchViewModelState()
-    
-    var statePublished: Published<SearchViewModelState> {
-        _state
-    }
-    
-    var statePublisher: Published<SearchViewModelState>.Publisher {
-        $state
-    }
     
     private var cancelBag = Set<AnyCancellable>()
     private let searchService: SearchService

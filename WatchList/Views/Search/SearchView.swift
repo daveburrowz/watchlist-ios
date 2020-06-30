@@ -44,7 +44,7 @@ struct SearchView: View {
                     viewModel.didTapButton()
                 }, label: {
                     Text("Search for matrix")
-                })
+                }).padding(.all, 10)
                 Spacer()
             }
         }.navigationTitle("Search")
