@@ -26,7 +26,7 @@
 		6D86341724A8AD4600D36ADB /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D86341624A8AD4600D36ADB /* Movie.swift */; };
 		6D86341924A8AD4D00D36ADB /* Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D86341824A8AD4D00D36ADB /* Show.swift */; };
 		6D86341B24A8B99900D36ADB /* Ids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D86341A24A8B99900D36ADB /* Ids.swift */; };
-		6D86341D24A8D8ED00D36ADB /* BindableSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D86341C24A8D8ED00D36ADB /* BindableSearchViewModel.swift */; };
+		6D86341D24A8D8ED00D36ADB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D86341C24A8D8ED00D36ADB /* SearchViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,7 +51,7 @@
 		6D86341624A8AD4600D36ADB /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		6D86341824A8AD4D00D36ADB /* Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Show.swift; sourceTree = "<group>"; };
 		6D86341A24A8B99900D36ADB /* Ids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ids.swift; sourceTree = "<group>"; };
-		6D86341C24A8D8ED00D36ADB /* BindableSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindableSearchViewModel.swift; sourceTree = "<group>"; };
+		6D86341C24A8D8ED00D36ADB /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,7 +148,7 @@
 			children = (
 				6D86340124A781FA00D36ADB /* SearchBar.swift */,
 				6D86340324A7829E00D36ADB /* SearchView.swift */,
-				6D86341C24A8D8ED00D36ADB /* BindableSearchViewModel.swift */,
+				6D86341C24A8D8ED00D36ADB /* SearchViewModel.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -266,7 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D86341D24A8D8ED00D36ADB /* BindableSearchViewModel.swift in Sources */,
+				6D86341D24A8D8ED00D36ADB /* SearchViewModel.swift in Sources */,
 				61EAB65624AB60FA00660953 /* ViewModelFactory.swift in Sources */,
 				6D86341B24A8B99900D36ADB /* Ids.swift in Sources */,
 				6D86341524A8ACE400D36ADB /* SearchResult.swift in Sources */,
