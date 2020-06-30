@@ -25,8 +25,6 @@ struct SearchItemView: View {
 
 struct SearchItemView_Previews: PreviewProvider {
     static var previews: some View {
-        let ids = Ids(trakt: 0, tmdb: 0)
-        let movie = Movie(ids: ids, title: "The matrix")
-        return SearchItemView(result: SearchResult.movie(movie))
+        return SearchItemView(result: ModelPreview.movieSearchResult())
     }
 }
