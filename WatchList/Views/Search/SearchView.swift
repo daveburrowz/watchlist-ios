@@ -10,22 +10,24 @@ import Combine
 
 struct SearchView: View {
     
-    @ObservedObject var viewModel: BindableSearchViewModel
+    private var viewModel: SearchViewModel
+    @ObservedObject private var state: SearchViewModelState
     
-    init(viewModel: BindableSearchViewModel) {
+    init(viewModel: SearchViewModel) {
         self.viewModel = viewModel
+        self.state = viewModel.state
     }
     
     var body: some View {
         VStack {
-            SearchBar(text: $viewModel.query, isLoading: $viewModel.isLoading)
+            SearchBar(text: $state.query, isLoading: $state.isLoading)
                 .padding(.top)
-            if viewModel.isShowingResults {
-                if viewModel.searchList.count > 0 {
-                    Text("You searched for: \(viewModel.query)")
+            if state.isShowingResults {
+                if state.searchList.count > 0 {
+                    Text("You searched for: \(state.query)")
                     ScrollView {
                         LazyVStack {
-                            ForEach(viewModel.searchList, id: \.self) { result in
+                            ForEach(state.searchList, id: \.self) { result in
                                 Text("\(result.title)")
                             }
                         }.padding(.bottom)
@@ -52,15 +54,21 @@ struct SearchView_Previews: PreviewProvider {
         }
     }
     
-    static var viewModel: BindableSearchViewModel {
-        return BindableSearchViewModel(searchService: MockSearchService())
+    static var viewModel: SearchViewModel {
+        return PreviewSearchViewModel()
     }
     
-    class MockSearchService: SearchService {
-        func search(for query: String) -> AnyPublisher<[SearchResult], Error> {
-            fatalError()
+    class PreviewSearchViewModel: SearchViewModel {
+        @Published
+        var state: SearchViewModelState = SearchViewModelState()
+        
+        var statePublished: Published<SearchViewModelState> {
+            _state
         }
-
+        
+        var statePublisher: Published<SearchViewModelState>.Publisher {
+            $state
+        }
     }
 }
 
