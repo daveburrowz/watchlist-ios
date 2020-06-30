@@ -15,7 +15,7 @@ class ViewModelFactory {
         self.serviceContainer = serviceContainer
     }
     
-    func search() -> BindableSearchViewModel {
-        return BindableSearchViewModel(searchService: serviceContainer.searchService)
+    func search() -> SearchViewModel {
+        return SearchViewModelImpl(searchService: serviceContainer.searchService)
     }
 }

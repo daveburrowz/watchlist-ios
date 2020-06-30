@@ -21,7 +21,7 @@ class SearchViewModelState: ObservableObject {
     @Published var isShowingResults = false
 }
 
-class BindableSearchViewModel: ObservableObject, SearchViewModel {
+class SearchViewModelImpl: ObservableObject, SearchViewModel {
     
     @Published
     var state: SearchViewModelState = SearchViewModelState()
