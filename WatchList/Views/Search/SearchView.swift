@@ -26,9 +26,9 @@ struct SearchView: View {
                 if state.searchList.count > 0 {
                     Text("You searched for: \(state.query)")
                     ScrollView {
-                        LazyVStack {
+                        VStack {
                             ForEach(state.searchList, id: \.self) { result in
-                                Text("\(result.title)")
+                                SearchItemView(result: result)
                             }
                         }.padding(.bottom)
                     }
@@ -40,11 +40,6 @@ struct SearchView: View {
             } else {
                 Spacer()
                 Text("Enter Search")
-                Button(action: {
-                    viewModel.didTapButton()
-                }, label: {
-                    Text("Search for matrix")
-                }).padding(.all, 10)
                 Spacer()
             }
         }.navigationTitle("Search")
