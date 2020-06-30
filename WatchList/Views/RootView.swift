@@ -27,7 +27,7 @@ struct RootView: View {
                 Image(systemName: "person.crop.circle")
                 Text("Profile")
             }
-        }
+        }.environmentObject(viewFactory)
     }
 }
 

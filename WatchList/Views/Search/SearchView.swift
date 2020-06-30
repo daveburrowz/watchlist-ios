@@ -10,6 +10,7 @@ import Combine
 
 struct SearchView: View {
     
+    @EnvironmentObject var viewFactory: ViewFactory
     private var viewModel: SearchViewModel
     @ObservedObject private var state: SearchViewModelState
     
@@ -28,7 +29,9 @@ struct SearchView: View {
                     ScrollView {
                         VStack {
                             ForEach(state.searchList, id: \.self) { result in
-                                SearchItemView(result: result)
+                                NavigationLink(destination: viewFactory.detail(result: result)) {
+                                    SearchItemView(result: result)
+                                }.buttonStyle(PlainButtonStyle())
                             }
                         }.padding(.bottom)
                     }

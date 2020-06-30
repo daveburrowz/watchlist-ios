@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwiftUI
 
-class ViewFactory {
+class ViewFactory: ObservableObject  {
     
     private var viewModelFactory: ViewModelFactory
     
@@ -17,6 +18,17 @@ class ViewFactory {
     
     func search() -> SearchView {
         return SearchView(viewModel: viewModelFactory.search())
+    }
+    
+    func detail(result: SearchResult) -> AnyView {
+        switch result {
+        case .movie(let movie):
+            return AnyView(MovieDetail(movie: movie))
+        case .show(let show):
+            return AnyView(ShowDetail(show: show))
+        case .unknown:
+            fatalError()
+        }
     }
     
     static func create() -> ViewFactory {
