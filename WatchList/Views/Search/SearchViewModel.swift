@@ -20,9 +20,8 @@ class SearchViewModelState: ObservableObject {
     @Published var isShowingResults = false
 }
 
-class SearchViewModelImpl: ObservableObject, SearchViewModel {
+class SearchViewModelImpl: SearchViewModel {
     
-    @Published
     var state: SearchViewModelState = SearchViewModelState()
     
     private var cancelBag = Set<AnyCancellable>()
