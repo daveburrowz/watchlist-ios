@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct RootView: View {
+    
+    private var viewFactory = ViewFactory.create()
+    
     var body: some View {
         TabView {
             NavigationView {
-                SearchView()
+                viewFactory.search()
             }.tabItem {
                 Image(systemName: "magnifyingglass")
                 Text("Search")

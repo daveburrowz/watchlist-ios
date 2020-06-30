@@ -17,10 +17,12 @@ class BindableSearchViewModel: ObservableObject {
     @Published var isShowingResults = false
     
     private var cancelBag = Set<AnyCancellable>()
-    private var repo = NetworkSearchRepository(httpClient: TraktHTTPClient(httpClient: FoundationHTTPClient()))
+    private let searchService: SearchService
     
     
-    init() {
+    init(searchService: SearchService) {
+        self.searchService = searchService
+        
         configureSearchDebouncePublisher()
         configureShowingResultsPublisher()
         configureIsLoadingPublisher()
@@ -58,7 +60,7 @@ class BindableSearchViewModel: ObservableObject {
             searchList = []
             return
         }
-        repo.search(for: query)
+        searchService.search(for: query)
             .sink(receiveCompletion: { [weak self] _ in
                 self?.isLoading = false
             },

@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import Combine
 
 struct SearchView: View {
     
-    @ObservedObject var viewModel = BindableSearchViewModel()
+    @ObservedObject var viewModel: BindableSearchViewModel
+    
+    init(viewModel: BindableSearchViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         VStack {
@@ -43,7 +48,19 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SearchView()
+            SearchView(viewModel: viewModel)
         }
     }
+    
+    static var viewModel: BindableSearchViewModel {
+        return BindableSearchViewModel(searchService: MockSearchService())
+    }
+    
+    class MockSearchService: SearchService {
+        func search(for query: String) -> AnyPublisher<[SearchResult], Error> {
+            fatalError()
+        }
+
+    }
 }
+
