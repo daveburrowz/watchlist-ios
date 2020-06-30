@@ -29,9 +29,9 @@ struct SearchView: View {
                     ScrollView {
                         VStack {
                             ForEach(state.searchList, id: \.self) { result in
-                                NavigationLink(destination: viewFactory.detail(result: result)) {
+                                NavigationLink(destination: LazyView(viewFactory.detail(result: result))) {
                                     SearchItemView(result: result)
-                                }.buttonStyle(PlainButtonStyle())
+                                }
                             }
                         }.padding(.bottom)
                     }
@@ -44,6 +44,7 @@ struct SearchView: View {
                 Spacer()
                 Text("Enter Search")
                 Spacer()
+                LazyView(Spacer())
             }
         }.navigationTitle("Search")
         .navigationBarTitleDisplayMode(.inline)
@@ -62,7 +63,7 @@ struct SearchView_Previews: PreviewProvider {
     }
     
     class PreviewSearchViewModel: SearchViewModel {
-       
+        
         @Published
         var state: SearchViewModelState = SearchViewModelState()
         
