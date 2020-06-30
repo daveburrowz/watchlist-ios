@@ -68,14 +68,6 @@ struct SearchView_Previews: PreviewProvider {
         @Published
         var state: SearchViewModelState = SearchViewModelState()
         
-        var statePublished: Published<SearchViewModelState> {
-            _state
-        }
-        
-        var statePublisher: Published<SearchViewModelState>.Publisher {
-            $state
-        }
-        
         func didTapButton() {
             
         }
