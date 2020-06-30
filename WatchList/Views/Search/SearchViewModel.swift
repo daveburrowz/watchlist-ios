@@ -12,6 +12,8 @@ protocol SearchViewModel {
     var state: SearchViewModelState { get }
     var statePublished: Published<SearchViewModelState> { get }
     var statePublisher: Published<SearchViewModelState>.Publisher { get }
+    
+    func didTapButton()
 }
 
 class SearchViewModelState: ObservableObject {
@@ -84,5 +86,9 @@ class SearchViewModelImpl: ObservableObject, SearchViewModel {
             receiveValue: { [weak self] results in
                 self?.state.searchList = results
             }).store(in: &cancelBag)
+    }
+    
+    func didTapButton() {
+        state.query = "The Matrix"
     }
 }

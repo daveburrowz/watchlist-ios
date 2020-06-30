@@ -40,6 +40,11 @@ struct SearchView: View {
             } else {
                 Spacer()
                 Text("Enter Search")
+                Button(action: {
+                    viewModel.didTapButton()
+                }, label: {
+                    Text("Search for matrix")
+                })
                 Spacer()
             }
         }.navigationTitle("Search")
@@ -59,6 +64,7 @@ struct SearchView_Previews: PreviewProvider {
     }
     
     class PreviewSearchViewModel: SearchViewModel {
+       
         @Published
         var state: SearchViewModelState = SearchViewModelState()
         
@@ -68,6 +74,10 @@ struct SearchView_Previews: PreviewProvider {
         
         var statePublisher: Published<SearchViewModelState>.Publisher {
             $state
+        }
+        
+        func didTapButton() {
+            
         }
     }
 }
