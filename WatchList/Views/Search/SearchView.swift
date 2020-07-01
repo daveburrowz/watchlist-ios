@@ -29,11 +29,11 @@ struct SearchView: View {
                         VStack {
                             ForEach(state.searchList, id: \.self) { result in
                                 NavigationLink(destination: LazyView(viewFactory.detail(result: result))) {
-                                    SearchItemView(result: result)
+                                    SearchItemView(result: result).padding(.horizontal)
                                 }.buttonStyle(PlainButtonStyle())
                             }
                         }.padding(.bottom)
-                    }.padding(.horizontal)
+                    }
                 } else {
                     Spacer()
                     ProgressView()

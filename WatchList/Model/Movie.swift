@@ -8,6 +8,7 @@
 import Foundation
 
 struct Movie: Decodable, Equatable, Hashable  {
-    var ids: Ids
-    var title: String
+    let ids: Ids
+    let title: String
+    let year: Int?
 }

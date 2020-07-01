@@ -15,11 +15,11 @@ class ModelPreview {
     
     static func movie() -> Movie {
         let ids = Ids(trakt: 0, tmdb: 0)
-        return Movie(ids: ids, title: "The matrix")
+        return Movie(ids: ids, title: "The matrix", year: 1999)
     }
     
     static func show() -> Show {
         let ids = Ids(trakt: 0, tmdb: 0)
-        return Show(ids: ids, title: "Game of thrones")
+        return Show(ids: ids, title: "Game of thrones", year: 2011)
     }
 }

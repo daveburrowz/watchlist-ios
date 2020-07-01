@@ -20,10 +20,16 @@ struct SearchItemView: View {
             Image("matrix")
                 .resizable()
                 .aspectRatio(0.66, contentMode: .fit)
-            Text(result.title)
+                .cornerRadius(8)
+            VStack(alignment: .leading) {
+                Text(result.title)
+                result.year.map( { Text("\(String($0))") })
+            }
             Spacer()
-        }.frame(minWidth: 0, idealWidth: 100, maxWidth: .infinity, minHeight: 0, idealHeight: 100, maxHeight: 100, alignment: .center)
-        .padding(.vertical, 10)
+        }
+        .frame(minWidth: 0, idealWidth: 100, maxWidth: .infinity, minHeight: 0, idealHeight: 100, maxHeight: 100, alignment: .leading)
+        .padding(.bottom, 8)
+        .contentShape(Rectangle())
     }
 }
 

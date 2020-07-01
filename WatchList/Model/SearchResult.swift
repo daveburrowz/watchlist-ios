@@ -44,4 +44,15 @@ enum SearchResult: Decodable, Equatable, Hashable  {
             fatalError("Should never happen")
         }
     }
+    
+    var year: Int? {
+        switch self {
+        case .movie(let movie):
+            return movie.year
+        case .show(let show):
+            return show.year
+        case .unknown:
+            fatalError("Should never happen")
+        }
+    }
 }
