@@ -21,7 +21,7 @@ struct SearchView: View {
     
     var body: some View {
         VStack {
-            SearchBar(text: $state.query, isLoading: $state.isLoading)
+            SearchBar(text: $state.query, isLoading: state.isLoading)
                 .padding(.top)
             switch state.state {
             case .empty:

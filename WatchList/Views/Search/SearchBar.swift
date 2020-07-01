@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchBar: View {
     @Binding var text: String
-    @Binding var isLoading: Bool
+    var isLoading: Bool
 
     @State private var isEditing = false
         
@@ -71,6 +71,6 @@ struct SearchBar: View {
 
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBar(text: .constant("Search Text"), isLoading: .constant(false))
+        SearchBar(text: .constant("Search Text"), isLoading: false)
     }
 }
