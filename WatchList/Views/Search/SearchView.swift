@@ -25,7 +25,6 @@ struct SearchView: View {
                 .padding(.top)
             if state.isShowingResults {
                 if state.searchList.count > 0 {
-                    Text("You searched for: \(state.query)")
                     ScrollView {
                         VStack {
                             ForEach(state.searchList, id: \.self) { result in
@@ -34,7 +33,7 @@ struct SearchView: View {
                                 }.buttonStyle(PlainButtonStyle())
                             }
                         }.padding(.bottom)
-                    }
+                    }.padding(.horizontal)
                 } else {
                     Spacer()
                     ProgressView()
@@ -59,13 +58,18 @@ struct SearchView_Previews: PreviewProvider {
     }
     
     static var viewModel: SearchViewModel {
-        return PreviewSearchViewModel()
+        return PreviewSearchViewModel(results: [ModelPreview.movieSearchResult()])
     }
     
     class PreviewSearchViewModel: SearchViewModel {
         
         @Published
         var state: SearchViewModelState = SearchViewModelState()
+        
+        init(results: [SearchResult]) {
+            state.isShowingResults = true
+            state.searchList = results
+        }
         
         func didTapButton() {
             
