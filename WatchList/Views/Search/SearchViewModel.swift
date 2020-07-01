@@ -12,7 +12,7 @@ protocol SearchViewModel {
     var state: SearchViewModelState { get }
 }
 
-enum SearchViewModelStateState {
+enum SearchViewModelResultsState {
     case empty
     case loaded(results: [SearchResult])
     case noResults
@@ -22,7 +22,7 @@ enum SearchViewModelStateState {
 class SearchViewModelState: ObservableObject {
     @Published var query = ""
     @Published var isLoading = false
-    @Published var state  = SearchViewModelStateState.empty
+    @Published var resultsState  = SearchViewModelResultsState.empty
 }
 
 class SearchViewModelImpl: SearchViewModel {
@@ -44,10 +44,10 @@ class SearchViewModelImpl: SearchViewModel {
     private func configureEmptyPublisher() {
         state.$query
             .receive(on: RunLoop.main)
-            .map({ $0.count == 0 ? SearchViewModelStateState.empty : nil })
+            .map({ $0.count == 0 ? SearchViewModelResultsState.empty : nil })
             .sink(receiveValue: { [weak self] (state) in
                 guard let state = state else { return }
-                self?.state.state = state
+                self?.state.resultsState = state
                 self?.searchCancellable = nil
             })
             .store(in: &cancelBag)
@@ -80,14 +80,14 @@ class SearchViewModelImpl: SearchViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 self?.state.isLoading = false
                 if case .failure = completion {
-                    self?.state.state = .error
+                    self?.state.resultsState = .error
                 }
             },
             receiveValue: { [weak self] results in
                 if results.count > 0 {
-                    self?.state.state = .loaded(results: results)
+                    self?.state.resultsState = .loaded(results: results)
                 } else {
-                    self?.state.state = .noResults
+                    self?.state.resultsState = .noResults
                 }
             })
     }

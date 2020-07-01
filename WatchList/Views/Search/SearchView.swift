@@ -23,7 +23,7 @@ struct SearchView: View {
         VStack {
             SearchBar(text: $state.query, isLoading: state.isLoading)
                 .padding(.top)
-            switch state.state {
+            switch state.resultsState {
             case .empty:
                 Spacer()
                 if state.isLoading {
@@ -73,7 +73,7 @@ struct SearchView_Previews: PreviewProvider {
         var state: SearchViewModelState = SearchViewModelState()
         
         init(results: [SearchResult]) {
-            state.state = .loaded(results: results)
+            state.resultsState = .loaded(results: results)
         }
         
         func didTapButton() {
