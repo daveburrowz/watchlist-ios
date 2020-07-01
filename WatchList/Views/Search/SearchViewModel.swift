@@ -17,7 +17,8 @@ class SearchViewModelState: ObservableObject {
     @Published var searchList: [SearchResult] = []
     @Published var query = ""
     @Published var isLoading = false
-    @Published var isShowingResults = false
+    @Published var showResults = false
+    @Published var showError =  false
 }
 
 class SearchViewModelImpl: SearchViewModel {
@@ -48,7 +49,7 @@ class SearchViewModelImpl: SearchViewModel {
         state.$query
             .receive(on: RunLoop.main)
             .map({ $0.count > 0 })
-            .assign(to: \.isShowingResults, on: state)
+            .assign(to: \.showResults, on: state)
             .store(in: &cancelBag)
     }
     
@@ -62,14 +63,22 @@ class SearchViewModelImpl: SearchViewModel {
     
     private func search(for query: String) {
         state.isLoading = true
+        state.showError = false
         guard query.count > 0 else {
             state.isLoading = false
             state.searchList = []
             return
         }
         searchService.search(for: query)
-            .sink(receiveCompletion: { [weak self] _ in
-                self?.state.isLoading = false
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    self?.state.isLoading = false
+                case .failure:
+                    self?.state.isLoading = false
+                    self?.state.showResults = false
+                    self?.state.showError = true
+                }
             },
             receiveValue: { [weak self] results in
                 self?.state.searchList = results

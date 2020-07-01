@@ -23,7 +23,7 @@ struct SearchView: View {
         VStack {
             SearchBar(text: $state.query, isLoading: $state.isLoading)
                 .padding(.top)
-            if state.isShowingResults {
+            if state.showResults {
                 if state.searchList.count > 0 {
                     ScrollView {
                         VStack {
@@ -34,16 +34,27 @@ struct SearchView: View {
                             }
                         }.padding(.bottom)
                     }
-                } else {
+                }
+                else if state.isLoading {
                     Spacer()
                     ProgressView()
                     Spacer()
                 }
-            } else {
+                else {
+                    Spacer()
+                    Text("No Results")
+                    Spacer()
+                }
+            }
+            else if state.showError {
+                Spacer()
+                Text("Something went wrong :(")
+                Spacer()
+            }
+            else {
                 Spacer()
                 Text("Enter Search")
                 Spacer()
-                LazyView(Spacer())
             }
         }.navigationTitle("Search")
         .navigationBarTitleDisplayMode(.inline)
@@ -67,7 +78,7 @@ struct SearchView_Previews: PreviewProvider {
         var state: SearchViewModelState = SearchViewModelState()
         
         init(results: [SearchResult]) {
-            state.isShowingResults = true
+            state.showResults = true
             state.searchList = results
         }
         
