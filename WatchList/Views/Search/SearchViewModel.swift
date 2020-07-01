@@ -10,15 +10,19 @@ import Combine
 
 protocol SearchViewModel {
     var state: SearchViewModelState { get }
-    func didTapButton()
+}
+
+enum SearchViewModelStateState {
+    case empty
+    case loaded(results: [SearchResult])
+    case noResults
+    case error
 }
 
 class SearchViewModelState: ObservableObject {
-    @Published var searchList: [SearchResult] = []
     @Published var query = ""
     @Published var isLoading = false
-    @Published var showResults = false
-    @Published var showError =  false
+    @Published var state  = SearchViewModelStateState.empty
 }
 
 class SearchViewModelImpl: SearchViewModel {
@@ -26,14 +30,27 @@ class SearchViewModelImpl: SearchViewModel {
     var state: SearchViewModelState = SearchViewModelState()
     
     private var cancelBag = Set<AnyCancellable>()
+    private var searchCancellable: AnyCancellable?
     private let searchService: SearchService
     
     init(searchService: SearchService) {
         self.searchService = searchService
         
         configureSearchDebouncePublisher()
-        configureShowingResultsPublisher()
         configureIsLoadingPublisher()
+        configureEmptyPublisher()
+    }
+    
+    private func configureEmptyPublisher() {
+        state.$query
+            .receive(on: RunLoop.main)
+            .map({ $0.count == 0 ? SearchViewModelStateState.empty : nil })
+            .sink(receiveValue: { [weak self] (state) in
+                guard let state = state else { return }
+                self?.state.state = state
+                self?.searchCancellable = nil
+            })
+            .store(in: &cancelBag)
     }
     
     private func configureSearchDebouncePublisher() {
@@ -42,14 +59,6 @@ class SearchViewModelImpl: SearchViewModel {
             .debounce(for: 1, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
             .sink(receiveValue: { self.search(for: $0)})
-            .store(in: &cancelBag)
-    }
-    
-    private func configureShowingResultsPublisher() {
-        state.$query
-            .receive(on: RunLoop.main)
-            .map({ $0.count > 0 })
-            .assign(to: \.showResults, on: state)
             .store(in: &cancelBag)
     }
     
@@ -63,29 +72,23 @@ class SearchViewModelImpl: SearchViewModel {
     
     private func search(for query: String) {
         state.isLoading = true
-        state.showError = false
         guard query.count > 0 else {
             state.isLoading = false
-            state.searchList = []
             return
         }
-        searchService.search(for: query)
+        searchCancellable = searchService.search(for: query)
             .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    self?.state.isLoading = false
-                case .failure:
-                    self?.state.isLoading = false
-                    self?.state.showResults = false
-                    self?.state.showError = true
+                self?.state.isLoading = false
+                if case .failure = completion {
+                    self?.state.state = .error
                 }
             },
             receiveValue: { [weak self] results in
-                self?.state.searchList = results
-            }).store(in: &cancelBag)
-    }
-    
-    func didTapButton() {
-        state.query = "The Matrix"
+                if results.count > 0 {
+                    self?.state.state = .loaded(results: results)
+                } else {
+                    self?.state.state = .noResults
+                }
+            })
     }
 }

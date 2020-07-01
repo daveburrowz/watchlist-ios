@@ -23,37 +23,32 @@ struct SearchView: View {
         VStack {
             SearchBar(text: $state.query, isLoading: $state.isLoading)
                 .padding(.top)
-            if state.showResults {
-                if state.searchList.count > 0 {
-                    ScrollView {
-                        VStack {
-                            ForEach(state.searchList, id: \.self) { result in
-                                NavigationLink(destination: LazyView(viewFactory.detail(result: result))) {
-                                    SearchItemView(result: result).padding(.horizontal)
-                                }.buttonStyle(PlainButtonStyle())
-                            }
-                        }.padding(.bottom)
-                    }
-                }
-                else if state.isLoading {
-                    Spacer()
+            switch state.state {
+            case .empty:
+                Spacer()
+                if state.isLoading {
                     ProgressView()
-                    Spacer()
+                } else {
+                    Text("Enter Search")
                 }
-                else {
-                    Spacer()
-                    Text("No Results")
-                    Spacer()
+                Spacer()
+            case .loaded(let results):
+                ScrollView {
+                    VStack {
+                        ForEach(results, id: \.self) { result in
+                            NavigationLink(destination: LazyView(viewFactory.detail(result: result))) {
+                                SearchItemView(result: result).padding(.horizontal)
+                            }.buttonStyle(PlainButtonStyle())
+                        }
+                    }.padding(.bottom)
                 }
-            }
-            else if state.showError {
+            case .noResults:
+                Spacer()
+                Text("No Results")
+                Spacer()
+            case .error:
                 Spacer()
                 Text("Something went wrong :(")
-                Spacer()
-            }
-            else {
-                Spacer()
-                Text("Enter Search")
                 Spacer()
             }
         }.navigationTitle("Search")
@@ -78,8 +73,7 @@ struct SearchView_Previews: PreviewProvider {
         var state: SearchViewModelState = SearchViewModelState()
         
         init(results: [SearchResult]) {
-            state.showResults = true
-            state.searchList = results
+            state.state = .loaded(results: results)
         }
         
         func didTapButton() {
