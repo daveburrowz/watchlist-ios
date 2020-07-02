@@ -25,10 +25,10 @@ struct SearchResultsView: View {
                 Spacer()
             case .loaded(let results):
                 ScrollView {
-                    VStack {
-                        ForEach(results, id: \.self) { result in
-                            NavigationLink(destination: LazyView(viewFactory.detail(result: result))) {
-                                SearchItemView(result: result).padding(.horizontal)
+                    LazyVStack {
+                        ForEach(results, id: \.state.searchResult) { result in
+                            NavigationLink(destination: LazyView(viewFactory.detail(result: result.state.searchResult))) {
+                                SearchItemView(viewModel: result).padding(.horizontal)
                             }.buttonStyle(PlainButtonStyle())
                         }
                     }.padding(.bottom)

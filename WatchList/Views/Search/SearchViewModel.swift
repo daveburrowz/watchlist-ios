@@ -10,7 +10,7 @@ import Combine
 
 enum SearchResultsState {
     case loading
-    case loaded(results: [SearchResult])
+    case loaded(results: [AnyViewModel<SearchItemViewModelState, Never>])
     case noResults
     case error
 }
@@ -47,9 +47,11 @@ class SearchViewModel: ViewModel {
     private var cancelBag = Set<AnyCancellable>()
     private var searchCancellable: AnyCancellable?
     private let searchService: SearchService
+    private let viewModelFactory: ViewModelFactory
     
-    init(searchService: SearchService) {
+    init(searchService: SearchService, viewModelFactory: ViewModelFactory) {
         self.searchService = searchService
+        self.viewModelFactory = viewModelFactory
         
         configureSearchDebouncePublisher()
     }
@@ -104,7 +106,10 @@ class SearchViewModel: ViewModel {
             receiveValue: { [weak self] results in
                 guard let self = self else { return }
                 if results.count > 0 {
-                    self.state.resultsState = .showingResults(.loaded(results: results))
+                    let viewModels = results.map { (result) -> AnyViewModel<SearchItemViewModelState, Never> in
+                        return self.viewModelFactory.searchItem(result: result)
+                    }
+                    self.state.resultsState = .showingResults(.loaded(results: viewModels))
                 } else {
                     self.state.resultsState = .showingResults(.noResults)
                 }

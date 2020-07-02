@@ -9,20 +9,21 @@ import SwiftUI
 
 struct SearchItemView: View {
     
-    private let result: SearchResult
+    @EnvironmentObject private var viewFactory: ViewFactory
+    private let viewModel: AnyViewModel<SearchItemViewModelState, Never>
     
-    init(result: SearchResult) {
-        self.result = result
+    init(viewModel: AnyViewModel<SearchItemViewModelState, Never>) {
+        self.viewModel = viewModel
     }
     
     var body: some View {
         HStack {
-            TMDBImageView(tmdbId: result.tmdbId)
+            viewFactory.posterImage(viewModel: viewModel.state.posterViewModel)
                 .aspectRatio(0.66, contentMode: .fit)
                 .cornerRadius(8)
             VStack(alignment: .leading) {
-                Text(result.title)
-                result.year.map( { Text("\(String($0))") })
+                Text(viewModel.state.title)
+                viewModel.state.year.map( { Text("\(String($0))") })
             }
             Spacer()
         }
@@ -32,8 +33,8 @@ struct SearchItemView: View {
     }
 }
 
-struct SearchItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        return SearchItemView(result: ModelPreview.movieSearchResult()).previewLayout(.fixed(width: 375, height: 150))
-    }
-}
+//struct SearchItemView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        return SearchItemView(result: ModelPreview.movieSearchResult()).previewLayout(.fixed(width: 375, height: 150))
+//    }
+//}

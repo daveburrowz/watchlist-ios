@@ -16,6 +16,14 @@ class ViewModelFactory {
     }
     
     func search() -> AnyViewModel<SearchViewModelState, SearchInput> {
-        return AnyViewModel(SearchViewModel(searchService: serviceContainer.searchService))
+        return AnyViewModel(SearchViewModel(searchService: serviceContainer.searchService, viewModelFactory: self))
+    }
+    
+    func searchItem(result: SearchResult) -> AnyViewModel<SearchItemViewModelState, Never> {
+        return AnyViewModel(SearchItemViewModel(searchResult: result, viewModelFactory: self))
+    }
+    
+    func posterImage(tmbdId: Int?, type: MediaType) -> AnyViewModel<PosterImageViewModelState, PosterImageViewModelInput> {
+        return AnyViewModel(PosterImageViewModel(tmbdId: tmbdId, type: type, imageUrlService: serviceContainer.imageUrlService))
     }
 }

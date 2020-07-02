@@ -31,6 +31,10 @@ class ViewFactory: ObservableObject  {
         }
     }
     
+    func posterImage(viewModel: AnyViewModel<PosterImageViewModelState, PosterImageViewModelInput>) -> PosterImageView {
+        return PosterImageView(viewModel: viewModel)
+    }
+    
     static func create() -> ViewFactory {
         let dataAccessContainer = DataAccessContainer()
         let serviceContainer = ServiceContainer(dataAccessContainer: dataAccessContainer)

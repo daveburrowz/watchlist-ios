@@ -9,8 +9,11 @@ import Foundation
 
 class DataAccessContainer {
     var searchRepository: SearchRepository
+    var imageUrlRepository: ImageUrlRepository
     
     init() {
-        searchRepository = NetworkSearchRepository(httpClient: TraktHTTPClient(httpClient: FoundationHTTPClient()))
+        let foundationHTTPClient = FoundationHTTPClient()
+        searchRepository = NetworkSearchRepository(httpClient: TraktHTTPClient(httpClient: foundationHTTPClient))
+        imageUrlRepository = NetworkImageUrlRepository(httpClient: MovieDBHTTPClient(httpClient: foundationHTTPClient))
     }
 }
