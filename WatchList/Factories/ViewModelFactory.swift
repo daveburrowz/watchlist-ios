@@ -18,4 +18,8 @@ class ViewModelFactory {
     func search() -> SearchViewModel {
         return SearchViewModelImpl(searchService: serviceContainer.searchService)
     }
+    
+    func anySearch() -> AnyViewModel<AnySearchViewModelState, AnySearchInput> {
+        return AnyViewModel(AnySearchViewModel(searchService: serviceContainer.searchService))
+    }
 }

@@ -8,30 +8,24 @@
 import SwiftUI
 import Combine
 
-class RenderCount {
-    var count = 0 {
-        didSet {
-            print("count \(count)")
-        }
-    }
-}
-
-struct SearchView: View {
+struct AnySearchView: View {
     
     @EnvironmentObject var viewFactory: ViewFactory
-    private var viewModel: SearchViewModel
-    @ObservedObject private var state: SearchViewModelState
+    @ObservedObject private var viewModel: AnyViewModel<AnySearchViewModelState, AnySearchInput>
+    private var state: AnySearchViewModelState {
+        return viewModel.state
+    }
     var count = RenderCount()
+    @State private var query = ""
     
-    init(viewModel: SearchViewModel) {
+    init(viewModel: AnyViewModel<AnySearchViewModelState, AnySearchInput>) {
         self.viewModel = viewModel
-        self.state = viewModel.state
     }
     
     var body: some View {
         count.count = count.count + 1
         return VStack {
-            SearchBar(text: $state.query, isLoading: state.isLoading)
+            SearchBar(text: $query.didSet(execute: { viewModel.trigger(.search(query: $0)) }), isLoading: state.isLoading)
                 .padding(.top)
             switch state.resultsState {
             case .empty:
@@ -66,29 +60,25 @@ struct SearchView: View {
     }
 }
 
-struct SearchView_Previews: PreviewProvider {
+struct AnySearchView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SearchView(viewModel: viewModel)
+            AnySearchView(viewModel: viewModel)
         }
     }
     
-    static var viewModel: SearchViewModel {
-        return PreviewSearchViewModel(results: [ModelPreview.movieSearchResult()])
+    static var viewModel: AnyViewModel<AnySearchViewModelState, AnySearchInput> {
+        return AnyViewModel(PreviewAnySearchViewModel())
     }
     
-    class PreviewSearchViewModel: SearchViewModel {
-        
+    class PreviewAnySearchViewModel: ViewModel {
+     
         @Published
-        var state: SearchViewModelState = SearchViewModelState()
-        
-        init(results: [SearchResult]) {
-            state.resultsState = .loaded(results: results)
-        }
-        
-        func didTapButton() {
-            
+        var state: AnySearchViewModelState = AnySearchViewModelState()
+
+
+        func trigger(_ input: AnySearchInput) {
+
         }
     }
 }
-

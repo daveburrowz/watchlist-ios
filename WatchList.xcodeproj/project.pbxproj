@@ -12,6 +12,9 @@
 		615B17C524AB9E9200EF5E7F /* ModelPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615B17C424AB9E9200EF5E7F /* ModelPreview.swift */; };
 		615B17C824AB9F7800EF5E7F /* ShowDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615B17C724AB9F7800EF5E7F /* ShowDetail.swift */; };
 		615B17CA24ABA69100EF5E7F /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615B17C924ABA69100EF5E7F /* LazyView.swift */; };
+		61D3958824ADDEC000DD1665 /* AnyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D3958724ADDEC000DD1665 /* AnyViewModel.swift */; };
+		61D3958A24ADDF4A00DD1665 /* AnySearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D3958924ADDF4A00DD1665 /* AnySearchView.swift */; };
+		61D3958C24ADDF7A00DD1665 /* AnySearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D3958B24ADDF7A00DD1665 /* AnySearchViewModel.swift */; };
 		61EAB64E24AB56E600660953 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EAB64D24AB56E600660953 /* SearchService.swift */; };
 		61EAB65124AB60B000660953 /* DataAccessContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EAB65024AB60B000660953 /* DataAccessContainer.swift */; };
 		61EAB65324AB60D400660953 /* ServiceContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EAB65224AB60D400660953 /* ServiceContainer.swift */; };
@@ -40,6 +43,9 @@
 		615B17C424AB9E9200EF5E7F /* ModelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPreview.swift; sourceTree = "<group>"; };
 		615B17C724AB9F7800EF5E7F /* ShowDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowDetail.swift; sourceTree = "<group>"; };
 		615B17C924ABA69100EF5E7F /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
+		61D3958724ADDEC000DD1665 /* AnyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyViewModel.swift; sourceTree = "<group>"; };
+		61D3958924ADDF4A00DD1665 /* AnySearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySearchView.swift; sourceTree = "<group>"; };
+		61D3958B24ADDF7A00DD1665 /* AnySearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySearchViewModel.swift; sourceTree = "<group>"; };
 		61EAB64D24AB56E600660953 /* SearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
 		61EAB65024AB60B000660953 /* DataAccessContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessContainer.swift; sourceTree = "<group>"; };
 		61EAB65224AB60D400660953 /* ServiceContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceContainer.swift; sourceTree = "<group>"; };
@@ -188,6 +194,9 @@
 				6D86340324A7829E00D36ADB /* SearchView.swift */,
 				6D86341C24A8D8ED00D36ADB /* SearchViewModel.swift */,
 				615B17BE24AB9B9400EF5E7F /* SearchItemView.swift */,
+				61D3958724ADDEC000DD1665 /* AnyViewModel.swift */,
+				61D3958924ADDF4A00DD1665 /* AnySearchView.swift */,
+				61D3958B24ADDF7A00DD1665 /* AnySearchViewModel.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -314,6 +323,7 @@
 				6D86340424A7829E00D36ADB /* SearchView.swift in Sources */,
 				6D86341724A8AD4600D36ADB /* Movie.swift in Sources */,
 				61EAB65324AB60D400660953 /* ServiceContainer.swift in Sources */,
+				61D3958C24ADDF7A00DD1665 /* AnySearchViewModel.swift in Sources */,
 				615B17C224AB9DC300EF5E7F /* MovieDetail.swift in Sources */,
 				61EAB65124AB60B000660953 /* DataAccessContainer.swift in Sources */,
 				6D86340A24A79A2C00D36ADB /* Binding+didSet.swift in Sources */,
@@ -322,7 +332,9 @@
 				6D86340224A781FA00D36ADB /* SearchBar.swift in Sources */,
 				6D86340F24A8AB7900D36ADB /* HTTPClient.swift in Sources */,
 				6D30760924A77A8B0048E545 /* WatchListApp.swift in Sources */,
+				61D3958824ADDEC000DD1665 /* AnyViewModel.swift in Sources */,
 				61EAB65824AB610D00660953 /* ViewFactory.swift in Sources */,
+				61D3958A24ADDF4A00DD1665 /* AnySearchView.swift in Sources */,
 				6D86341224A8ACA700D36ADB /* SearchRepository.swift in Sources */,
 				615B17C524AB9E9200EF5E7F /* ModelPreview.swift in Sources */,
 				61EAB64E24AB56E600660953 /* SearchService.swift in Sources */,

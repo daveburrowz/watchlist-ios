@@ -20,6 +20,10 @@ class ViewFactory: ObservableObject  {
         return SearchView(viewModel: viewModelFactory.search())
     }
     
+    func anySearch() -> AnySearchView {
+        return AnySearchView(viewModel: viewModelFactory.anySearch())
+    }
+    
     func detail(result: SearchResult) -> AnyView {
         switch result {
         case .movie(let movie):
