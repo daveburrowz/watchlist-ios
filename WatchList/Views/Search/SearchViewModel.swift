@@ -37,13 +37,13 @@ enum SearchInput {
 }
 
 class SearchViewModel: ViewModel {
-
+    
     @Published
     var state: SearchViewModelState = SearchViewModelState()
     
     @Published
     private var query: String = ""
-
+    
     private var cancelBag = Set<AnyCancellable>()
     private var searchCancellable: AnyCancellable?
     private let searchService: SearchService
@@ -82,7 +82,9 @@ class SearchViewModel: ViewModel {
             .removeDuplicates()
             .debounce(for: 1, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { [weak self] in self?.search(for: $0)})
+            .sink(receiveValue: { [weak self] in
+                self?.search(for: $0)
+            })
             .store(in: &cancelBag)
     }
     
@@ -93,16 +95,18 @@ class SearchViewModel: ViewModel {
         }
         searchCancellable = searchService.search(for: query)
             .sink(receiveCompletion: { [weak self] completion in
-                self?.state.isLoading = false
+                guard let self = self else { return }
+                self.state.isLoading = false
                 if case .failure = completion {
-                    self?.state.resultsState = .showingResults(.error)
+                    self.state.resultsState = .showingResults(.error)
                 }
             },
             receiveValue: { [weak self] results in
+                guard let self = self else { return }
                 if results.count > 0 {
-                    self?.state.resultsState = .showingResults(.loaded(results: results))
+                    self.state.resultsState = .showingResults(.loaded(results: results))
                 } else {
-                    self?.state.resultsState = .showingResults(.noResults)
+                    self.state.resultsState = .showingResults(.noResults)
                 }
             })
     }
