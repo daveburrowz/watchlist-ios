@@ -19,9 +19,7 @@ struct RootView: View {
                 Image(systemName: "magnifyingglass")
                 Text("Search")
             }
-            NavigationView {
-                viewFactory.anySearch()
-            }
+            ContentView(name: "Watch List")
             .tabItem {
                 Image(systemName: "list.and.film")
                 Text("Watch List")

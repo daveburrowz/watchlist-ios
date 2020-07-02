@@ -15,11 +15,7 @@ class ViewModelFactory {
         self.serviceContainer = serviceContainer
     }
     
-    func search() -> SearchViewModel {
-        return SearchViewModelImpl(searchService: serviceContainer.searchService)
-    }
-    
-    func anySearch() -> AnyViewModel<AnySearchViewModelState, AnySearchInput> {
-        return AnyViewModel(AnySearchViewModel(searchService: serviceContainer.searchService))
+    func search() -> AnyViewModel<SearchViewModelState, SearchInput> {
+        return AnyViewModel(SearchViewModel(searchService: serviceContainer.searchService))
     }
 }
