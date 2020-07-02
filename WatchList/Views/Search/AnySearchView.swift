@@ -30,30 +30,10 @@ struct AnySearchView: View {
             switch state.resultsState {
             case .empty:
                 Spacer()
-                if state.isLoading {
-                    ProgressView()
-                } else {
-                    Text("Enter Search")
-                }
+                Text("Enter Search")
                 Spacer()
-            case .loaded(let results):
-                ScrollView {
-                    VStack {
-                        ForEach(results, id: \.self) { result in
-                            NavigationLink(destination: LazyView(viewFactory.detail(result: result))) {
-                                SearchItemView(result: result).padding(.horizontal)
-                            }.buttonStyle(PlainButtonStyle())
-                        }
-                    }.padding(.bottom)
-                }
-            case .noResults:
-                Spacer()
-                Text("No Results")
-                Spacer()
-            case .error:
-                Spacer()
-                Text("Something went wrong :(")
-                Spacer()
+            case .showingResults(let state):
+                SearchResultsView(state: state)
             }
         }.navigationTitle("Search")
         .navigationBarTitleDisplayMode(.inline)

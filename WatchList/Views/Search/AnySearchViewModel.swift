@@ -8,15 +8,27 @@
 import Foundation
 import Combine
 
-enum AnySearchViewModelResultsState {
-    case empty
+enum SearchResultsState {
+    case loading
     case loaded(results: [SearchResult])
     case noResults
     case error
 }
 
+enum AnySearchViewModelResultsState {
+    case empty
+    case showingResults(SearchResultsState)
+}
+
 struct AnySearchViewModelState {
-    var isLoading = false
+    var isLoading = false {
+        didSet {
+            guard case .empty = resultsState, isLoading == true else {
+                return
+            }
+            resultsState = .showingResults(.loading)
+        }
+    }
     var resultsState  = AnySearchViewModelResultsState.empty
 }
 
@@ -88,23 +100,23 @@ class AnySearchViewModel: ViewModel {
     }
     
     private func search(for query: String) {
-        state.isLoading = true
         guard query.count > 0 else {
             state.isLoading = false
             return
         }
+        state.isLoading = true
         searchCancellable = searchService.search(for: query)
             .sink(receiveCompletion: { [weak self] completion in
                 self?.state.isLoading = false
                 if case .failure = completion {
-                    self?.state.resultsState = .error
+                    self?.state.resultsState = .showingResults(.error)
                 }
             },
             receiveValue: { [weak self] results in
                 if results.count > 0 {
-                    self?.state.resultsState = .loaded(results: results)
+                    self?.state.resultsState = .showingResults(.loaded(results: results))
                 } else {
-                    self?.state.resultsState = .noResults
+                    self?.state.resultsState = .showingResults(.noResults)
                 }
             })
     }
