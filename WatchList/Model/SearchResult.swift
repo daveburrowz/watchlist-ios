@@ -66,4 +66,15 @@ enum SearchResult: Decodable, Equatable, Hashable  {
             fatalError("Should never happen")
         }
     }
+    
+    var type: MediaType{
+        switch self {
+        case .movie:
+            return .movie
+        case .show:
+            return .show
+        case .unknown:
+            fatalError("Should never happen")
+        }
+    }
 }

@@ -10,9 +10,10 @@ import SwiftUI
 struct TMDBImageView: View {
     
     var tmdbId: Int?
-    
+
     init(tmdbId: Int?) {
         self.tmdbId = tmdbId
+        
     }
     
     var body: some View {
