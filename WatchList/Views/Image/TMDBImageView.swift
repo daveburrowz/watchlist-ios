@@ -31,6 +31,9 @@ struct TMDBImageView: View {
 
 struct TMDBImageView_Previews: PreviewProvider {
     static var previews: some View {
-        TMDBImageView(tmdbId: 0)
+        Group {
+            TMDBImageView(tmdbId: 0)
+            TMDBImageView(tmdbId: nil)
+        }.previewLayout(.fixed(width: 100, height: 150))
     }
 }
