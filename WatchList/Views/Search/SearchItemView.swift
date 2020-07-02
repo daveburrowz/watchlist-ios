@@ -17,8 +17,7 @@ struct SearchItemView: View {
     
     var body: some View {
         HStack {
-            Image("matrix")
-                .resizable()
+            TMDBImageView(tmdbId: result.tmdbId)
                 .aspectRatio(0.66, contentMode: .fit)
                 .cornerRadius(8)
             VStack(alignment: .leading) {

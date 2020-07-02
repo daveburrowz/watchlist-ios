@@ -55,4 +55,15 @@ enum SearchResult: Decodable, Equatable, Hashable  {
             fatalError("Should never happen")
         }
     }
+    
+    var tmdbId: Int? {
+        switch self {
+        case .movie(let movie):
+            return movie.ids.tmdb
+        case .show(let show):
+            return show.ids.tmdb
+        case .unknown:
+            fatalError("Should never happen")
+        }
+    }
 }
