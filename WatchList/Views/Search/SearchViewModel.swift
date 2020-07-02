@@ -44,13 +44,6 @@ class SearchViewModel: ViewModel {
     @Published
     private var query: String = ""
 
-    func trigger(_ input: SearchInput) {
-        switch input {
-        case .search(let query):
-            search(query: query)
-        }
-    }
-
     private var cancelBag = Set<AnyCancellable>()
     private var searchCancellable: AnyCancellable?
     private let searchService: SearchService
@@ -59,25 +52,28 @@ class SearchViewModel: ViewModel {
         self.searchService = searchService
         
         configureSearchDebouncePublisher()
-        configureIsLoadingPublisher()
-        configureEmptyPublisher()
+    }
+    
+    func trigger(_ input: SearchInput) {
+        switch input {
+        case .search(let query):
+            search(query: query)
+        }
     }
     
     private func search(query: String) {
         self.query = query
+        configureState()
     }
     
-    private func configureEmptyPublisher() {
-        $query
-            .receive(on: RunLoop.main)
-            .dropFirst()
-            .map({ $0.count == 0 ? AnySearchViewModelResultsState.empty : nil })
-            .sink(receiveValue: { [weak self] (state) in
-                guard let state = state else { return }
-                self?.state.resultsState = state
-                self?.searchCancellable = nil
-            })
-            .store(in: &cancelBag)
+    private func configureState() {
+        if query.count > 0 {
+            state.isLoading = true
+        } else {
+            state.resultsState = .empty
+            searchCancellable = nil
+            state.isLoading = false
+        }
     }
     
     private func configureSearchDebouncePublisher() {
@@ -90,21 +86,11 @@ class SearchViewModel: ViewModel {
             .store(in: &cancelBag)
     }
     
-    private func configureIsLoadingPublisher() {
-        $query
-            .dropFirst()
-            .receive(on: RunLoop.main)
-            .map({ $0.count > 0 })
-            .sink(receiveValue: { [weak self] in self?.state.isLoading = $0 })
-            .store(in: &cancelBag)
-    }
-    
     private func search(for query: String) {
         guard query.count > 0 else {
             state.isLoading = false
             return
         }
-        state.isLoading = true
         searchCancellable = searchService.search(for: query)
             .sink(receiveCompletion: { [weak self] completion in
                 self?.state.isLoading = false
