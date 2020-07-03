@@ -21,9 +21,7 @@ struct PosterImageView: View {
             case .noImage:
                 Image("matrix").resizable()
             case .loaded:
-                Text("Loaded")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.red)
+                Image("reloaded").resizable()
             }
         }.onAppear {
             viewModel.trigger(.didAppear)
