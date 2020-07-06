@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol ImageUrlService {
-    func url(tmbdId: Int, type: MediaType) -> AnyPublisher<ImageResponse, Error>
+    func url(tmbdId: Int, type: MediaType) -> AnyPublisher<URL, Error>
 }
 
 class ImageUrlServiceImpl: ImageUrlService {
@@ -20,7 +20,7 @@ class ImageUrlServiceImpl: ImageUrlService {
         self.imageUrlRepository = imageUrlRepository
     }
     
-    func url(tmbdId: Int, type: MediaType) -> AnyPublisher<ImageResponse, Error> {
+    func url(tmbdId: Int, type: MediaType) -> AnyPublisher<URL, Error> {
         return imageUrlRepository.url(tmbdId: tmbdId, type: type)
     }
 }

@@ -58,7 +58,7 @@ class PosterImageViewModel: ViewModel {
             },
             receiveValue: { [weak self] result in
                 guard let self = self else { return }
-                print("loaded \(tmbdId)")
+                print("loaded \(tmbdId) \(result)")
                 self.state.viewState = .loaded
             })
 
