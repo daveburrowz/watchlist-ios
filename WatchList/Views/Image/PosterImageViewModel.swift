@@ -51,14 +51,12 @@ class PosterImageViewModel: ViewModel {
         imageCancellable = imageUrlService.url(tmbdId: tmbdId, type: type)
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
-                if case .failure(let error) = completion {
-                    print("failed \(tmbdId) \(error)")
+                if case .failure = completion {
                     self.state.viewState = .noImage
                 }
             },
             receiveValue: { [weak self] url in
                 guard let self = self else { return }
-                print("loaded \(tmbdId) \(url)")
                 self.state.viewState = .loaded(url)
             })
 

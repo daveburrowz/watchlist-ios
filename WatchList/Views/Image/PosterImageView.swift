@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import KingfisherSwiftUI
 
 struct PosterImageView: View {
     
@@ -19,9 +20,11 @@ struct PosterImageView: View {
         VStack {
             switch viewModel.state.viewState {
             case .noImage:
-                Image("matrix").resizable()
-            case .loaded:
-                Image("reloaded").resizable()
+                Image("no-poster").resizable()
+            case .loaded(let url):
+                KFImage(url).resizable().placeholder {
+                    Image("no-poster").resizable()
+                }
             }
         }.onAppear {
             viewModel.trigger(.didAppear)
