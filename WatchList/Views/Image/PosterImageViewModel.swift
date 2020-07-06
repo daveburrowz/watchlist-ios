@@ -10,7 +10,7 @@ import Combine
 
 enum PosterImageViewModelViewState {
     case noImage
-    case loaded
+    case loaded(URL)
 }
 
 struct PosterImageViewModelState {
@@ -56,10 +56,10 @@ class PosterImageViewModel: ViewModel {
                     self.state.viewState = .noImage
                 }
             },
-            receiveValue: { [weak self] result in
+            receiveValue: { [weak self] url in
                 guard let self = self else { return }
-                print("loaded \(tmbdId) \(result)")
-                self.state.viewState = .loaded
+                print("loaded \(tmbdId) \(url)")
+                self.state.viewState = .loaded(url)
             })
 
     }

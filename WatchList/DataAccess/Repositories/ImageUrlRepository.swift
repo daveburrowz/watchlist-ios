@@ -12,24 +12,24 @@ protocol ImageUrlRepository {
     func url(tmbdId: Int, type: MediaType) -> AnyPublisher<URL, Error>
 }
 
-struct MovieDBImageResponse: Decodable {
-    let id: Int
-    let posters: [MovieDBImage]
-}
-
-struct MovieDBImage: Decodable {
-    let filePath: String
-    let iso6391: String?
-    let voteAverage: Double
-    
-    enum CodingKeys: String, CodingKey {
-        case filePath = "file_path"
-        case iso6391 = "iso_639_1"
-        case voteAverage = "vote_average"
-    }
-}
-
 class NetworkImageUrlRepository: ImageUrlRepository {
+    
+    struct MovieDBImageResponse: Decodable {
+        let id: Int
+        let posters: [MovieDBImage]
+    }
+
+    struct MovieDBImage: Decodable {
+        let filePath: String
+        let iso6391: String?
+        let voteAverage: Double
+        
+        enum CodingKeys: String, CodingKey {
+            case filePath = "file_path"
+            case iso6391 = "iso_639_1"
+            case voteAverage = "vote_average"
+        }
+    }
     
     enum ImageError: Error {
         case noImage
@@ -69,7 +69,7 @@ class NetworkImageUrlRepository: ImageUrlRepository {
     
     private func url(for response: MovieDBImageResponse) -> AnyPublisher<URL, Error> {
         Future<URL, Error> { promise in
-            DispatchQueue.global().async {
+            DispatchQueue.global(qos: .userInteractive).async {
                 
                 guard let url = self.url(for: response.posters) else {
                     promise(.failure(ImageError.noImage))

@@ -9,9 +9,9 @@ import SwiftUI
 
 struct PosterImageView: View {
     
-    @ObservedObject private var viewModel: AnyViewModel<PosterImageViewModelState, PosterImageViewModelInput>
+    @ObservedObject private var viewModel: AnyPosterImageViewModel
 
-    init(viewModel: AnyViewModel<PosterImageViewModelState, PosterImageViewModelInput>) {
+    init(viewModel: AnyPosterImageViewModel) {
         self.viewModel = viewModel
     }
     

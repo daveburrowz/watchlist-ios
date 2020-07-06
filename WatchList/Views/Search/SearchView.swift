@@ -11,14 +11,14 @@ import Combine
 struct SearchView: View {
     
     @EnvironmentObject var viewFactory: ViewFactory
-    @ObservedObject private var viewModel: AnyViewModel<SearchViewModelState, SearchInput>
+    @ObservedObject private var viewModel: AnySearchViewModel
     private var state: SearchViewModelState {
         return viewModel.state
     }
     
     @State private var query = ""
     
-    init(viewModel: AnyViewModel<SearchViewModelState, SearchInput>) {
+    init(viewModel: AnySearchViewModel) {
         self.viewModel = viewModel
     }
     
@@ -46,7 +46,7 @@ struct AnySearchView_Previews: PreviewProvider {
         }
     }
     
-    static var viewModel: AnyViewModel<SearchViewModelState, SearchInput> {
+    static var viewModel: AnySearchViewModel {
         return AnyViewModel(PreviewAnySearchViewModel())
     }
     

@@ -10,9 +10,9 @@ import SwiftUI
 struct SearchItemView: View {
     
     @EnvironmentObject private var viewFactory: ViewFactory
-    private let viewModel: AnyViewModel<SearchItemViewModelState, Never>
+    private let viewModel: AnySearchItemViewModel
     
-    init(viewModel: AnyViewModel<SearchItemViewModelState, Never>) {
+    init(viewModel: AnySearchItemViewModel) {
         self.viewModel = viewModel
     }
     
