@@ -18,7 +18,7 @@ struct SearchItemView: View {
     
     var body: some View {
         HStack {
-            viewFactory.posterImage(viewModel: viewModel.state.posterViewModel)
+            viewFactory.presenterPosterImage(presenter: viewModel.posterPresenter)
                 .aspectRatio(0.66, contentMode: .fit)
                 .cornerRadius(8)
             VStack(alignment: .leading) {

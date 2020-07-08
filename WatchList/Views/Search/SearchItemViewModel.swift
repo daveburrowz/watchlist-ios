@@ -11,7 +11,7 @@ import Combine
 struct SearchItemViewModelState {
     let title: String
     let year: String?
-    let posterViewModel: AnyViewModel<PosterImageViewModelState, PosterImageViewModelInput>
+    let posterPresenter: PosterImagePresenterProtocol
     let searchResult: SearchResult
 }
 
@@ -21,11 +21,11 @@ class SearchItemViewModel: ViewModel {
     var state: SearchItemViewModelState
     
     init(searchResult: SearchResult, viewModelFactory: ViewModelFactory) {
-        let posterViewModel = viewModelFactory.posterImage(tmbdId: searchResult.tmdbId, type: searchResult.type)
+        let posterViewModel = viewModelFactory.presenterPosterImage(tmbdId: searchResult.tmdbId, type: searchResult.type)
         let year = searchResult.year.map { (year) -> String in
             String(year)
         } 
-        state = SearchItemViewModelState(title: searchResult.title, year: year, posterViewModel: posterViewModel, searchResult: searchResult)
+        state = SearchItemViewModelState(title: searchResult.title, year: year, posterPresenter: posterViewModel, searchResult: searchResult)
     }
     
     func trigger(_ input: Never) {
