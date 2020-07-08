@@ -17,14 +17,29 @@ class PresenterPosterImageViewModel: ObservableObject {
   @Published var state: State = .noImage
 }
 
-protocol PosterImagePresenterProtocol {
-    var viewModel: PresenterPosterImageViewModel { get }
+extension PresenterPosterImageViewModel: PosterImagePresenterDelegate {
+    func noImage() {
+        state = .noImage
+    }
+    
+    func loaded(_ url: URL) {
+        state = .loaded(url)
+    }
+}
+
+protocol PosterImagePresenterProtocol: class {
+    var delegate: PosterImagePresenterDelegate? { get set }
     func load()
+}
+
+protocol PosterImagePresenterDelegate: class {
+    func noImage()
+    func loaded(_ url: URL)
 }
 
 class PosterImagePresenter: PosterImagePresenterProtocol {
     
-    private(set) var viewModel =  PresenterPosterImageViewModel()
+    weak var delegate: PosterImagePresenterDelegate?
     
     private let imageUrlService: ImageUrlService
     private var imageCancellable: AnyCancellable?
@@ -45,12 +60,12 @@ class PosterImagePresenter: PosterImagePresenterProtocol {
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
                 if case .failure = completion {
-                    self.viewModel.state = .noImage
+                    self.delegate?.noImage()
                 }
             },
             receiveValue: { [weak self] url in
                 guard let self = self else { return }
-                self.viewModel.state = .loaded(url)
+                self.delegate?.loaded(url)
             })
     }
 }

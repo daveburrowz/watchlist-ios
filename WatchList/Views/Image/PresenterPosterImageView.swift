@@ -13,8 +13,8 @@ struct PresenterPosterImageView: View {
     @ObservedObject private var viewModel: PresenterPosterImageViewModel
     private let presenter: PosterImagePresenterProtocol
 
-    init(presenter: PosterImagePresenterProtocol) {
-        self.viewModel = presenter.viewModel
+    init(viewModel: PresenterPosterImageViewModel, presenter: PosterImagePresenterProtocol) {
+        self.viewModel = viewModel
         self.presenter = presenter
     }
     

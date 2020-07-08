@@ -11,7 +11,7 @@ import Combine
 struct SearchItemViewModelState {
     let title: String
     let year: String?
-    let posterPresenter: PosterImagePresenterProtocol
+    let posterPresenter: (PresenterPosterImageViewModel, PosterImagePresenterProtocol)
     let searchResult: SearchResult
 }
 

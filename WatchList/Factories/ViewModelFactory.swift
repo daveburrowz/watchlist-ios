@@ -31,7 +31,10 @@ class ViewModelFactory {
         return AnyViewModel(PosterImageViewModel(tmbdId: tmbdId, type: type, imageUrlService: serviceContainer.imageUrlService))
     }
     
-    func presenterPosterImage(tmbdId: Int?, type: MediaType) -> PosterImagePresenterProtocol {
-        return PosterImagePresenter(tmbdId: tmbdId, type: type, imageUrlService: serviceContainer.imageUrlService)
+    func presenterPosterImage(tmbdId: Int?, type: MediaType) ->  (PresenterPosterImageViewModel, PosterImagePresenterProtocol) {
+        let viewModel = PresenterPosterImageViewModel()
+        let presenter = PosterImagePresenter(tmbdId: tmbdId, type: type, imageUrlService: serviceContainer.imageUrlService)
+        presenter.delegate = viewModel
+        return (viewModel, presenter)
     }
 }
