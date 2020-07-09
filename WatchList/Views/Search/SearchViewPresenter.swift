@@ -8,38 +8,6 @@
 import Foundation
 import Combine
 
-struct SearchResultsViewModel {
-    
-    enum State {
-        case loading
-        case loaded(results: [SearchItemViewModel])
-        case noResults
-        case error
-    }
-    
-    let state: State
-}
-
-enum SearchViewModelResultsState {
-    case empty
-    case showingResults(SearchResultsViewModel)
-}
-
-class SearchViewModel: ObservableObject {
-    
-    @Published
-    var isLoading = false {
-        didSet {
-            guard case .empty = resultsState, isLoading == true else {
-                return
-            }
-            resultsState = SearchViewModelResultsState.showingResults(SearchResultsViewModel(state: .loading))
-        }
-    }
-    
-    var resultsState  = SearchViewModelResultsState.empty
-}
-
 protocol SearchViewPresenterProtocol {
     var viewModel: SearchViewModel { get }
     func search(query: String)

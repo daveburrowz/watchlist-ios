@@ -8,15 +8,6 @@
 import Foundation
 import Combine
 
-class PosterImageViewModel: ObservableObject {
-  enum State {
-    case noImage
-    case loaded(URL)
-  }
-  
-  @Published var state: State = .noImage
-}
-
 protocol PosterImagePresenterProtocol {
     var viewModel: PosterImageViewModel { get }
     func load()
