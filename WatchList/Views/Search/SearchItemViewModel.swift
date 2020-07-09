@@ -16,7 +16,7 @@ struct SearchItemViewModel {
     let searchResult: SearchResult
     
     init(searchResult: SearchResult, viewModelFactory: ViewModelFactory) {
-        let posterPresenter = viewModelFactory.presenterPosterImage(tmbdId: searchResult.tmdbId, type: searchResult.type)
+        let posterPresenter = viewModelFactory.posterImage(tmbdId: searchResult.tmdbId, type: searchResult.type)
         let year = searchResult.year.map { (year) -> String in
             String(year)
         }

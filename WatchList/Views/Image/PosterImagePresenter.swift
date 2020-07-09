@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class PresenterPosterImageViewModel: ObservableObject {
+class PosterImageViewModel: ObservableObject {
   enum State {
     case noImage
     case loaded(URL)
@@ -18,13 +18,13 @@ class PresenterPosterImageViewModel: ObservableObject {
 }
 
 protocol PosterImagePresenterProtocol {
-    var viewModel: PresenterPosterImageViewModel { get }
+    var viewModel: PosterImageViewModel { get }
     func load()
 }
 
 class PosterImagePresenter: PosterImagePresenterProtocol {
     
-    private(set) var viewModel =  PresenterPosterImageViewModel()
+    private(set) var viewModel =  PosterImageViewModel()
     
     private let imageUrlService: ImageUrlService
     private var imageCancellable: AnyCancellable?

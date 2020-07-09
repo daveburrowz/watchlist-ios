@@ -23,7 +23,7 @@ class ViewModelFactory {
         return SearchItemViewModel(searchResult: result, viewModelFactory: self)
     }
     
-    func presenterPosterImage(tmbdId: Int?, type: MediaType) -> PosterImagePresenterProtocol {
+    func posterImage(tmbdId: Int?, type: MediaType) -> PosterImagePresenterProtocol {
         return PosterImagePresenter(tmbdId: tmbdId, type: type, imageUrlService: serviceContainer.imageUrlService)
     }
 }

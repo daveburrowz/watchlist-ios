@@ -8,9 +8,9 @@
 import SwiftUI
 import KingfisherSwiftUI
 
-struct PresenterPosterImageView: View {
+struct PosterImageView: View {
     
-    @ObservedObject private var viewModel: PresenterPosterImageViewModel
+    @ObservedObject private var viewModel: PosterImageViewModel
     private let presenter: PosterImagePresenterProtocol
 
     init(presenter: PosterImagePresenterProtocol) {
@@ -37,13 +37,13 @@ struct PresenterPosterImageView: View {
 struct PresenterPosterImageView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PresenterPosterImageView(presenter: PreviewPosterImagePresenter())
-            PresenterPosterImageView(presenter: PreviewPosterImagePresenter())
+            PosterImageView(presenter: PreviewPosterImagePresenter())
+            PosterImageView(presenter: PreviewPosterImagePresenter())
         }.previewLayout(.fixed(width: 100, height: 150))
     }
     
     class PreviewPosterImagePresenter: PosterImagePresenterProtocol {
-        var viewModel = PresenterPosterImageViewModel()
+        var viewModel = PosterImageViewModel()
         
         func load() {
     

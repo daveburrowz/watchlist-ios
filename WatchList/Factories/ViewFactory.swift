@@ -31,8 +31,8 @@ class ViewFactory: ObservableObject  {
         }
     }
     
-    func presenterPosterImage(presenter: PosterImagePresenterProtocol) -> PresenterPosterImageView {
-        return PresenterPosterImageView(presenter: presenter)
+    func posterImage(presenter: PosterImagePresenterProtocol) -> PosterImageView {
+        return PosterImageView(presenter: presenter)
     }
     
     static func create() -> ViewFactory {
