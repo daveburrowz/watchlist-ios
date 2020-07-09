@@ -10,15 +10,15 @@ import SwiftUI
 struct SearchResultsView: View {
     
     @EnvironmentObject private var viewFactory: ViewFactory
-    private var state: SearchResultsState
+    private var viewModel: SearchResultsViewModel
     
-    init(state: SearchResultsState) {
-        self.state = state
+    init(viewModel: SearchResultsViewModel) {
+        self.viewModel = viewModel
     }
     
     var body: some View {
         Group {
-            switch state {
+            switch viewModel.state {
             case .loading:
                 Spacer()
                 ProgressView()
@@ -26,8 +26,8 @@ struct SearchResultsView: View {
             case .loaded(let results):
                 ScrollView {
                     LazyVStack {
-                        ForEach(results, id: \.state.searchResult) { result in
-                            NavigationLink(destination: LazyView(viewFactory.detail(result: result.state.searchResult))) {
+                        ForEach(results, id: \.searchResult) { result in
+                            NavigationLink(destination: LazyView(viewFactory.detail(result: result.searchResult))) {
                                 SearchItemView(viewModel: result).padding(.horizontal)
                             }.buttonStyle(PlainButtonStyle())
                         }
@@ -48,6 +48,6 @@ struct SearchResultsView: View {
 
 struct SearchResultsView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchResultsView(state: SearchResultsState.loading)
+        SearchResultsView(viewModel: SearchResultsViewModel(state: .noResults))
     }
 }

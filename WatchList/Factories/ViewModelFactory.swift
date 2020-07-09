@@ -7,10 +7,6 @@
 
 import Foundation
 
-typealias AnySearchViewModel = AnyViewModel<SearchViewModelState, SearchInput>
-typealias AnySearchItemViewModel = AnyViewModel<SearchItemViewModelState, Never>
-typealias AnyPosterImageViewModel = AnyViewModel<PosterImageViewModelState, PosterImageViewModelInput>
-
 class ViewModelFactory {
     
     private var serviceContainer: ServiceContainer
@@ -19,16 +15,12 @@ class ViewModelFactory {
         self.serviceContainer = serviceContainer
     }
     
-    func search() -> AnySearchViewModel {
-        return AnyViewModel(SearchViewModel(searchService: serviceContainer.searchService, viewModelFactory: self))
+    func search() -> SearchViewPresenter {
+        return SearchViewPresenter(searchService: serviceContainer.searchService, viewModelFactory: self)
     }
     
-    func searchItem(result: SearchResult) -> AnySearchItemViewModel {
-        return AnyViewModel(SearchItemViewModel(searchResult: result, viewModelFactory: self))
-    }
-    
-    func posterImage(tmbdId: Int?, type: MediaType) -> AnyPosterImageViewModel {
-        return AnyViewModel(PosterImageViewModel(tmbdId: tmbdId, type: type, imageUrlService: serviceContainer.imageUrlService))
+    func searchItem(result: SearchResult) -> SearchItemViewModel {
+        return SearchItemViewModel(searchResult: result, viewModelFactory: self)
     }
     
     func presenterPosterImage(tmbdId: Int?, type: MediaType) -> PosterImagePresenterProtocol {

@@ -1,45 +1,53 @@
 //
-//  AnySearchViewModel.swift
+//  SearchViewPresenter.swift
 //  WatchList
 //
-//  Created by davidb on 02/07/2020.
+//  Created by davidb on 09/07/2020.
 //
 
 import Foundation
 import Combine
 
-enum SearchResultsState {
-    case loading
-    case loaded(results: [AnyViewModel<SearchItemViewModelState, Never>])
-    case noResults
-    case error
+struct SearchResultsViewModel {
+    
+    enum State {
+        case loading
+        case loaded(results: [SearchItemViewModel])
+        case noResults
+        case error
+    }
+    
+    let state: State
 }
 
-enum AnySearchViewModelResultsState {
+enum SearchViewModelResultsState {
     case empty
-    case showingResults(SearchResultsState)
+    case showingResults(SearchResultsViewModel)
 }
 
-struct SearchViewModelState {
+class SearchViewModel: ObservableObject {
+    
+    @Published
     var isLoading = false {
         didSet {
             guard case .empty = resultsState, isLoading == true else {
                 return
             }
-            resultsState = .showingResults(.loading)
+            resultsState = SearchViewModelResultsState.showingResults(SearchResultsViewModel(state: .loading))
         }
     }
-    var resultsState  = AnySearchViewModelResultsState.empty
-}
-
-enum SearchInput {
-    case search(query: String)
-}
-
-class SearchViewModel: ViewModel {
     
-    @Published
-    var state: SearchViewModelState = SearchViewModelState()
+    var resultsState  = SearchViewModelResultsState.empty
+}
+
+protocol SearchViewPresenterProtocol {
+    var viewModel: SearchViewModel { get }
+    func search(query: String)
+}
+
+class SearchViewPresenter: SearchViewPresenterProtocol {
+    
+    var viewModel = SearchViewModel()
     
     @Published
     private var query: String = ""
@@ -56,25 +64,18 @@ class SearchViewModel: ViewModel {
         configureSearchDebouncePublisher()
     }
     
-    func trigger(_ input: SearchInput) {
-        switch input {
-        case .search(let query):
-            search(query: query)
-        }
-    }
-    
-    private func search(query: String) {
+    func search(query: String) {
         self.query = query
         configureState()
     }
     
     private func configureState() {
         if query.count > 0 {
-            state.isLoading = true
+            viewModel.isLoading = true
         } else {
-            state.resultsState = .empty
+            viewModel.resultsState = .empty
             searchCancellable = nil
-            state.isLoading = false
+            viewModel.isLoading = false
         }
     }
     
@@ -92,26 +93,26 @@ class SearchViewModel: ViewModel {
     
     private func search(for query: String) {
         guard query.count > 0 else {
-            state.isLoading = false
+            viewModel.isLoading = false
             return
         }
         searchCancellable = searchService.search(for: query)
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
-                self.state.isLoading = false
+                self.viewModel.isLoading = false
                 if case .failure = completion {
-                    self.state.resultsState = .showingResults(.error)
+                    self.viewModel.resultsState = .showingResults(SearchResultsViewModel(state: .error))
                 }
             },
             receiveValue: { [weak self] results in
                 guard let self = self else { return }
                 if results.count > 0 {
-                    let viewModels = results.map { (result) -> AnyViewModel<SearchItemViewModelState, Never> in
+                    let viewModels = results.map { (result) -> SearchItemViewModel in
                         return self.viewModelFactory.searchItem(result: result)
                     }
-                    self.state.resultsState = .showingResults(.loaded(results: viewModels))
+                    self.viewModel.resultsState = .showingResults(SearchResultsViewModel(state: .loaded(results: viewModels)))
                 } else {
-                    self.state.resultsState = .showingResults(.noResults)
+                    self.viewModel.resultsState = .showingResults(SearchResultsViewModel(state: .noResults))
                 }
             })
     }

@@ -10,9 +10,9 @@ import SwiftUI
 struct SearchItemView: View {
     
     @EnvironmentObject private var viewFactory: ViewFactory
-    private let viewModel: AnySearchItemViewModel
+    private let viewModel: SearchItemViewModel
     
-    init(viewModel: AnySearchItemViewModel) {
+    init(viewModel: SearchItemViewModel) {
         self.viewModel = viewModel
     }
     
@@ -22,8 +22,8 @@ struct SearchItemView: View {
                 .aspectRatio(0.66, contentMode: .fit)
                 .cornerRadius(8)
             VStack(alignment: .leading) {
-                Text(viewModel.state.title)
-                viewModel.state.year.map( { Text("\(String($0))") })
+                Text(viewModel.title)
+                viewModel.year.map( { Text("\(String($0))") })
             }
             Spacer()
         }

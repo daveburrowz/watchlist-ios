@@ -17,7 +17,7 @@ class ViewFactory: ObservableObject  {
     }
     
     func search() -> SearchView {
-        return SearchView(viewModel: viewModelFactory.search())
+        return SearchView(presenter: viewModelFactory.search())
     }
     
     func detail(result: SearchResult) -> AnyView {
@@ -29,10 +29,6 @@ class ViewFactory: ObservableObject  {
         case .unknown:
             fatalError()
         }
-    }
-    
-    func posterImage(viewModel: AnyViewModel<PosterImageViewModelState, PosterImageViewModelInput>) -> PosterImageView {
-        return PosterImageView(viewModel: viewModel)
     }
     
     func presenterPosterImage(presenter: PosterImagePresenterProtocol) -> PresenterPosterImageView {

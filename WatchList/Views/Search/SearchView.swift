@@ -10,29 +10,28 @@ import Combine
 
 struct SearchView: View {
     
-    @EnvironmentObject var viewFactory: ViewFactory
-    @ObservedObject private var viewModel: AnySearchViewModel
-    private var state: SearchViewModelState {
-        return viewModel.state
-    }
+    private var presenter: SearchViewPresenterProtocol
     
+    @EnvironmentObject var viewFactory: ViewFactory
+    @ObservedObject private var viewModel: SearchViewModel
     @State private var query = ""
     
-    init(viewModel: AnySearchViewModel) {
-        self.viewModel = viewModel
+    init(presenter: SearchViewPresenterProtocol) {
+        self.viewModel = presenter.viewModel
+        self.presenter = presenter
     }
     
     var body: some View {
         VStack {
-            SearchBar(text: $query.didSet(execute: { viewModel.trigger(.search(query: $0)) }), isLoading: state.isLoading)
+            SearchBar(text: $query.didSet(execute: { presenter.search(query: $0) }), isLoading: viewModel.isLoading)
                 .padding(.top)
-            switch state.resultsState {
+            switch viewModel.resultsState {
             case .empty:
                 Spacer()
                 Text("Enter Search")
                 Spacer()
-            case .showingResults(let state):
-                SearchResultsView(state: state)
+            case .showingResults(let viewModel):
+                SearchResultsView(viewModel: viewModel)
             }
         }.navigationTitle("Search")
         .navigationBarTitleDisplayMode(.inline)
@@ -42,22 +41,14 @@ struct SearchView: View {
 struct AnySearchView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SearchView(viewModel: viewModel)
+            SearchView(presenter: PreviewSearchViewPresenter())
         }
     }
     
-    static var viewModel: AnySearchViewModel {
-        return AnyViewModel(PreviewAnySearchViewModel())
-    }
-    
-    class PreviewAnySearchViewModel: ViewModel {
+    class PreviewSearchViewPresenter : SearchViewPresenterProtocol {
+        var viewModel = SearchViewModel()
         
-        @Published
-        var state: SearchViewModelState = SearchViewModelState()
-        
-        
-        func trigger(_ input: SearchInput) {
-            
+        func search(query: String) {
         }
     }
 }

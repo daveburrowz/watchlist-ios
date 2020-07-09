@@ -37,8 +37,16 @@ struct PresenterPosterImageView: View {
 struct PresenterPosterImageView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PosterImageView(viewModel: AnyViewModel(PreviewPosterImageViewModel()))
-            PosterImageView(viewModel: AnyViewModel(PreviewPosterImageViewModel()))
+            PresenterPosterImageView(presenter: PreviewPosterImagePresenter())
+            PresenterPosterImageView(presenter: PreviewPosterImagePresenter())
         }.previewLayout(.fixed(width: 100, height: 150))
+    }
+    
+    class PreviewPosterImagePresenter: PosterImagePresenterProtocol {
+        var viewModel = PresenterPosterImageViewModel()
+        
+        func load() {
+    
+        }
     }
 }
